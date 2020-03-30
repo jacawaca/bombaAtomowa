@@ -1,0 +1,19 @@
+\noindent
+\begin{algorithm}
+\caption{Algorytm liczenia mocy wybuchu}
+\begin{algorithmic}[1]
+\Procedure{Wyznaczenie ilości mocy w jednostce czasu}{}
+\State $\text{atomowAll}, \text{masaAll} \gets \text{UserInput}$
+\State $\text{masaNeutronu}\gets 1,67492721*10^{-27} kg$
+\State $c\gets 3*10^8 \frac{m}{s^2}$
+\State $\text{isWorking}\gets \text{UserInput}$
+\State $\text{curPower} \gets 0$
+\While{$\text{isWorking} = Yes$}
+    \State $\text{curPower} += \text{newNeutron}\text{masaNeutronu}*c^2 $
+    \State $\text{Output}\gets \frac{\text{curPower}}{masaAll}$
+\EndWhile
+
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}

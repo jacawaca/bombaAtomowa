@@ -1,0 +1,34 @@
+\noindent
+\begin{algorithm}
+\caption{Algorytm na ruch atomów "w symulacji"}
+\begin{algorithmic}[1]
+\State $dt \gets 0.1, t \gets 0$
+\State $\text{allAtom} \gets \text{UserInput}$
+\State $\text{Atomy[allAtom]}\gets {0,0,0} $
+\State $\text{isWorking}\gets \text{UserInput}$
+\State $\text{Neutrony*}\gets 0$
+\State Określenie, które punkty siatki będą zajęte przez aktywne jądra.
+\State zapełnij(Atomy[])
+
+\While{$\text{isWorking}=\boldsymbol{true}$}
+    \State Pętla po wszystkich atomach, żeby określić, które ulegą samoistnemu rozpadowi oraz generacja neutronów.
+    \For{i: Atomy}{$i++$}
+        \If{$\text{Atomy[i].czyRozpadl}=\text{false}$ oraz czyRozpadnie()=true}{ $\text{Atomy[i].czyRozpadl}=\text{true}$}
+            \For{i: 1-N}
+            \State new neutron=generuj(Atom[i])
+            \State Neutrony.add(neutron)
+            \EndFor
+            \State Energia += energiaRozpadu()
+            \State $\text{newNeutron} += N$
+        \EndIf
+    
+    \EndFor
+    \State liczMoc(newNeutron)
+    \State Czyścimy: $\text{newNeutron} =0$
+    \State ruszajAndWybuchaj(neutrony,dt) 
+    \State $t += dt$
+    
+\EndWhile
+
+\end{algorithmic}
+\end{algorithm}
