@@ -1,29 +1,24 @@
 package pogui;
 
+import java.awt.GridLayout;
 import java.awt.LayoutManager;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class Dolny extends JPanel {
-
+	JButton chColorBack, chLang, runButton;
 	public Dolny() {
-		// TODO Auto-generated constructor stub
+		
+		this.setLayout(new GridLayout(1, 3));
+		chColorBack = new JButton("Zmieñ kolor t³a"); add(chColorBack);
+		chLang = new JButton("Zmieñ jêzyk"); add(chLang);
+		runButton = new JButton("START/STOP"); add(runButton);
+		
+		this.setVisible(true);
 	}
 
-	public Dolny(LayoutManager layout) {
-		super(layout);
-		// TODO Auto-generated constructor stub
-	}
-
-	public Dolny(boolean isDoubleBuffered) {
-		super(isDoubleBuffered);
-		// TODO Auto-generated constructor stub
-	}
-
-	public Dolny(LayoutManager layout, boolean isDoubleBuffered) {
-		super(layout, isDoubleBuffered);
-		// TODO Auto-generated constructor stub
-	}
+	
 
 }
 //

@@ -27,10 +27,10 @@ public class Frame extends JFrame {
 		
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
-		this.add(new LewyInfo(), BorderLayout.PAGE_START);
-		this.add(new PrawyInfo(), BorderLayout.PAGE_END);
+		this.add(new LewyInfo(), BorderLayout.LINE_START);
+		this.add(new PrawyInfo(), BorderLayout.LINE_END);
 		this.add(new Centralny(), BorderLayout.CENTER);
-		this.add(new Dolny(), BorderLayout.LINE_END);
+		this.add(new Dolny(), BorderLayout.PAGE_END);
 		
 	}
 
