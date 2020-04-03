@@ -26,3 +26,4 @@ public class PrawyInfo extends JPanel {
 	}
 
 }
+//

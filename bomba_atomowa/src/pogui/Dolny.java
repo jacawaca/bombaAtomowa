@@ -26,3 +26,4 @@ public class Dolny extends JPanel {
 	}
 
 }
+//

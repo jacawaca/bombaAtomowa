@@ -26,3 +26,4 @@ public class Centralny extends JPanel {
 	}
 
 }
+//
