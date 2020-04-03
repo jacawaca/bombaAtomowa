@@ -10,7 +10,7 @@ public class Centralny extends JPanel {
 
 	public Centralny() {
 		this.setBackground(Color.blue);
-	
+		
 	}
 
 	

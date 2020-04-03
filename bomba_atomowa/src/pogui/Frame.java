@@ -1,4 +1,7 @@
 package pogui;
+// Jacek Strza³kowski
+
+
 
 import java.awt.BorderLayout;
 import java.awt.GraphicsConfiguration;
@@ -13,32 +16,26 @@ public class Frame extends JFrame {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 	}
 
-	public Frame(GraphicsConfiguration gc) {
-		super(gc);
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		this.setVisible(true);
-	}
 
 	public Frame(String title) throws HeadlessException {
 		super(title);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		this.setSize(500, 500);
+//		this.setSize(500, 500);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
+		
+		
 		this.add(new LewyInfo(), BorderLayout.LINE_START);
 		this.add(new PrawyInfo(), BorderLayout.LINE_END);
 		this.add(new Centralny(), BorderLayout.CENTER);
 		this.add(new Dolny(), BorderLayout.PAGE_END);
 		
+		this.setJMenuBar(new MenuBar());
+		
 	}
 
-	public Frame(String title, GraphicsConfiguration gc) {
-		super(title, gc);
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		this.setVisible(true);
-	}
 
 	public static void main(String[] args) {
 		// test

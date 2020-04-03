@@ -1,5 +1,7 @@
 package pogui;
 
+//Jacek Strza³kowski
+
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
 

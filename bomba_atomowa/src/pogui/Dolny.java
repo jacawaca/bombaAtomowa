@@ -7,6 +7,10 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class Dolny extends JPanel {
+	/**
+	 *  Jacek Strza³kowski
+	 */
+	private static final long serialVersionUID = 1L;
 	JButton chColorBack, chLang, runButton;
 	public Dolny() {
 		

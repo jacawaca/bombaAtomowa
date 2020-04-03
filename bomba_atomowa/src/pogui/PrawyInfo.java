@@ -1,3 +1,4 @@
+// Jacek Strza³kowski
 package pogui;
 
 import java.awt.GridLayout;
