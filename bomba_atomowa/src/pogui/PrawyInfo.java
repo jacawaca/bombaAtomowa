@@ -44,6 +44,7 @@ public class PrawyInfo extends JPanel {
 				runButtom.setStartTime();
 				timeField.setStartTime(runButtom.getStartTime());
 				Thread runThread = new Thread(timeField);
+				timeField.setisRunning(runButtom.isRunning());
 				runThread.start();
 				
 			}
