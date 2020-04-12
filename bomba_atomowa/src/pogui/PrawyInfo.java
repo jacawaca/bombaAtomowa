@@ -1,8 +1,10 @@
-// Jacek Strza³kowski
+// @author Jacek StrzaÅ‚kowski
 package pogui;
 
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -12,16 +14,40 @@ import javax.swing.JTextField;
 //import com.sun.org.apache.xerces.internal.parsers.IntegratedParserConfiguration;
 
 public class PrawyInfo extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 53862670099238588L;
 	JTextField fieldPower;
+	TimeTextField timeField;
+	RunButton runButtom;
 
 	public PrawyInfo() {
-		this.setLayout(new GridLayout(4, 1));
-		this.add(new JLabel("Wydzielona moc"));
+		setLayout(new GridLayout(5, 1));
+		add(new JLabel("Wydzielona moc"));
 		int curPower=0;
-		// Jak bêdziemy robiæ fizykê, to zapewne zrobimy osobn¹ paczkê/klasê
-		// np. "Symulacja", której parametry bêd¹ wczytywane do guzików
+		// Jak bï¿½dziemy robiï¿½ fizykï¿½, to zapewne zrobimy osobnï¿½ paczkï¿½/klasï¿½
+		// np. "Symulacja", ktï¿½rej parametry bï¿½dï¿½ wczytywane do guzikï¿½w
 		fieldPower = new JTextField(Integer.toString(curPower));
 		add(fieldPower);
+		
+		add(new JLabel("Czas trwania symulacji"));
+		timeField = new TimeTextField();
+		add(timeField);
+		
+		runButtom = new RunButton(); add(runButtom); //Dodany runButtom
+		runButtom.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				runButtom.setRunning(!runButtom.isRunning());
+				runButtom.setStartTime();
+				timeField.setStartTime(runButtom.getStartTime());
+				Thread runThread = new Thread(timeField);
+				runThread.start();
+				
+			}
+		});
 	}
 
 	

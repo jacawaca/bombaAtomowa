@@ -1,6 +1,6 @@
 package pogui;
 
-//Jacek Strza³kowski
+//@author Jacek StrzaÅ‚kowski
 
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
@@ -15,31 +15,23 @@ public class LewyInfo extends JPanel {
 	Kontrolka nNeutronow;
 	
 	public LewyInfo() {
-		this.setLayout(new GridLayout(5,1));
-		this.add(new JLabel("Parametry symulacji"));
+		setLayout(new GridLayout(5,1));
+		add(new JLabel("Parametry symulacji"));
 		
-		nAtomow = new Kontrolka("Iloœæ atomów uranu", 0); this.add(nAtomow);
-		pRozpadu = new Kontrolka("Prawdopodobieñstwo rozpadu", 0); this.add(pRozpadu);
-		nEnergii= new Kontrolka("Iloœæ energii wytwarzanej w czasie rozpadu", 0); this.add(nEnergii);
-		nNeutronow= new Kontrolka("Iloœæ neutronów wyrzucanych w czasie rozpadu", 0); this.add(nNeutronow);
+		nAtomow = new Kontrolka("IloÅ›Ä‡ atomÃ³w uranu", 1000,0,1000000);
+		add(nAtomow);
+		pRozpadu = new Kontrolka("PrawdopodobieÅ„stwo rozpadu",5, 0, 10);
+		// od 1 -> 10: 
+		// przekazana wartoÅ›Ä‡ a -> a/10 np. 5 na Sliderze, to 0.5 prawd
+		add(pRozpadu);
+		nEnergii= new Kontrolka("IloÅ›Ä‡ energii wytwarzanej w czasie rozpadu", 500,0,10000);
+		add(nEnergii);
+		nNeutronow= new Kontrolka("IloÅ›Ä‡ neutronÃ³w wyrzucanych w czasie rozpadu", 3,1,8);
+		add(nNeutronow);
 		
 		
 	}
 
-	public LewyInfo(LayoutManager layout) {
-		super(layout);
-		// TODO Auto-generated constructor stub
-	}
-
-	public LewyInfo(boolean isDoubleBuffered) {
-		super(isDoubleBuffered);
-		// TODO Auto-generated constructor stub
-	}
-
-	public LewyInfo(LayoutManager layout, boolean isDoubleBuffered) {
-		super(layout, isDoubleBuffered);
-		// TODO Auto-generated constructor stub
-	}
 
 }
 //

@@ -1,39 +1,24 @@
 package pogui;
+//@author Jacek Strzalkowski
 
+import java.awt.GridLayout;
 import java.awt.LayoutManager;
 
 import javax.swing.*;
 
 public class Kontrolka extends JPanel {
-	JLabel coMierzy;
-	JTextField wartosc;
-
-	public Kontrolka() {
-		this.setVisible(true);
-		coMierzy = new JLabel("Example");
-		wartosc = new JTextField("0");
-		this.add(coMierzy);
-		this.add(wartosc);
-	}
+	private JLabel obserLabel;
+	private JSlider valueSlider;
 	
-	public Kontrolka(String co, double iniIle)
+	public Kontrolka(String co, int iniIle, int sliderMin, int sliderMax)
 	{
-		this.setVisible(true);
-		coMierzy = new JLabel(co);
-		wartosc = new JTextField(Double.toString(iniIle));
-		this.add(coMierzy);
-		this.add(wartosc);
+		setVisible(true);
+		obserLabel = new JLabel(co);
+		valueSlider = new JSlider(sliderMin, sliderMax, iniIle);
+		add(obserLabel);
+		add(valueSlider);
+		setLayout(new GridLayout(2, 1));
 	}
-	
-//	public static void main(String[] args) {
-//		// test
-//		JFrame okno = new JFrame();
-//		okno.setVisible(true);
-//		okno.add(new Kontrolka("tt", 4));
-//		
-//		
-//
-//	}
 
 
 }

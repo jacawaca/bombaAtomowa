@@ -1,6 +1,6 @@
 package pogui;
-// Jacek Strza�kowski
-
+// Jacek Strzałkowski
+// wyrzuciłem niepotrzebne this., przed wywołaniem metody Frame'a
 
 
 import java.awt.BorderLayout;
@@ -12,27 +12,27 @@ import javax.swing.JFrame;
 public class Frame extends JFrame {
 
 	public Frame() throws HeadlessException {
-		this.setVisible(true);
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		setVisible(true);
 	}
 
 
 	public Frame(String title) throws HeadlessException {
 		super(title);
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-//		this.setSize(500, 500);
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
+//		setSize(500, 500);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setResizable(false);
+//		setLayout(new BorderLayout());
 		
-		this.setVisible(true);
-		this.setLayout(new BorderLayout());
 		
+		add(new LewyInfo(), BorderLayout.LINE_START);
+		add(new PrawyInfo(), BorderLayout.LINE_END);
+		add(new Centralny(), BorderLayout.CENTER);
+		add(new Dolny(), BorderLayout.PAGE_END);
 		
-		this.add(new LewyInfo(), BorderLayout.LINE_START);
-		this.add(new PrawyInfo(), BorderLayout.LINE_END);
-		this.add(new Centralny(), BorderLayout.CENTER);
-		this.add(new Dolny(), BorderLayout.PAGE_END);
-		
-		this.setJMenuBar(new MenuBar());
+		setJMenuBar(new MenuBar());
+		setVisible(true);
 		
 	}
 
