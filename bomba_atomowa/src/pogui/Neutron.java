@@ -15,5 +15,8 @@ public class Neutron extends Particle {
 		this.dy=dy;
 		this.dz=dz;
 	}
+	double getX() { return x;}
+	double getY() { return y;}
+	double getZ() { return z;}
 
 }
