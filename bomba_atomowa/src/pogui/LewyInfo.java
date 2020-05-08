@@ -13,6 +13,7 @@ public class LewyInfo extends JPanel {
 	Kontrolka pRozpadu;
 	Kontrolka nEnergii;
 	Kontrolka nNeutronow;
+	JLabel parametry;
 	
 	boolean isPolish;
 	
@@ -23,14 +24,16 @@ public class LewyInfo extends JPanel {
 			energii_pl= "Ilość energii wytwarzanej w czasie rozpadu", 
 			energii_eng = "Amount of Energy produced during decay",
 			neutronow_pl= "Ilość neutronów wyrzucanych w czasie rozpadu", 
-			neutronow_eng = "Number of neutrons which are produceds by decay";
+			neutronow_eng = "Number of neutrons which are produceds by decay",
+			parametry_pl = "Parametry Symulacji",
+			parametry_eng = "Parametrics of simulation";
 				
 	
 	
 	public LewyInfo() {
 		isPolish=true;
 		setLayout(new GridLayout(5,1));
-		add(new JLabel("Parametry symulacji"));
+		parametry = new JLabel(parametry_pl); add(parametry);
 		
 		nAtomow = new Kontrolka(nAtomow_pl, 1000,0,1000000);
 		add(nAtomow);
@@ -47,16 +50,20 @@ public class LewyInfo extends JPanel {
 	}
 	void changeLanguage() {
 		if(isPolish) {
-			nAtomow.setName(nAtomow_eng);
-			pRozpadu.setName(rozpadu_eng);
-			nEnergii.setName(energii_eng);
-			nNeutronow.setName(neutronow_eng);
+			nAtomow.setText(nAtomow_eng);
+			pRozpadu.setText(rozpadu_eng);
+			nEnergii.setText(energii_eng);
+			nNeutronow.setText(neutronow_eng);
+			parametry.setText(parametry_eng);
+			isPolish=false;
 		}
 		else {
-			nAtomow.setName(nAtomow_pl);
-			pRozpadu.setName(rozpadu_pl);
-			nEnergii.setName(energii_pl);
-			nNeutronow.setName(neutronow_pl);
+			nAtomow.setText(nAtomow_pl);
+			pRozpadu.setText(rozpadu_pl);
+			nEnergii.setText(energii_pl);
+			nNeutronow.setText(neutronow_pl);
+			parametry.setText(parametry_pl);
+			isPolish=true;
 		}
 	}
 	

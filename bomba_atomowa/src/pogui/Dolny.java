@@ -1,5 +1,5 @@
 package pogui;
-
+// @author Jacek Strzałkowski
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
 
@@ -35,12 +35,12 @@ public class Dolny extends JPanel {
 		if(isPolish) {
 			runButton.setText(runButton_eng);
 			infoSimulation.setText(infoDisplay_eng);
+			isPolish=false;
 		}
 		else {
-			if(isPolish) {
 				runButton.setText(runButton_pl);
 				infoSimulation.setText(infoDisplay_pl);
-			}
+				isPolish=true;
 		}
 	}
 

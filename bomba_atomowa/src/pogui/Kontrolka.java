@@ -19,6 +19,8 @@ public class Kontrolka extends JPanel {
 		add(valueSlider);
 		setLayout(new GridLayout(2, 1));
 	}
-
+	void setText(String txt){
+		obserLabel.setText(txt);
+	}
 
 }

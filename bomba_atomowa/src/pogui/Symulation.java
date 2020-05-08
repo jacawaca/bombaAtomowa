@@ -23,6 +23,8 @@ public class Symulation extends SwingWorker<BufferedImage, Void> {
 	private List<Particle> particle;// = new ArrayList<Particle>();
 	private double allMasa;
 	private final int dim=100;
+	private final int showedX = 50, showedYmin = 0, showedYmax = 40,
+			showedZmin = 0, showedZmax=40;
 	private Centralny centralny;
 	
 	public Symulation(Centralny centralny) {
@@ -33,7 +35,7 @@ public class Symulation extends SwingWorker<BufferedImage, Void> {
 //		uran, bar, krypton, neutron;
 //	}
 	
-	void setMove() {
+	void setMove() { //TODO
 		
 	}
 	
@@ -41,8 +43,22 @@ public class Symulation extends SwingWorker<BufferedImage, Void> {
 		
 	}
 	
-	void setToExpl() {
+	void setToExpl() { //TODO
 		
+	}
+	
+	void draw(BufferedImage img) {
+		Graphics2D g = img.createGraphics();
+		for(int y=showedYmin;y<showedYmax;y++) {
+			for(int z=showedZmin;z<showedZmax;z++) {
+				int ypos = img.getWidth()/showedYmax*y;
+				int zpos = img.getWidth()/showedZmax*z;
+				if(siatka.dane[showedX][y][z]==1) {
+					g.setColor(Color.BLACK);
+					g.fillOval(ypos, zpos, 10, 10);
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -53,7 +69,7 @@ public class Symulation extends SwingWorker<BufferedImage, Void> {
 		siatka = new Siatka(nPart, particle);	
 //
 		BufferedImage img = new BufferedImage(centralny.getWidth(), centralny.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = img.createGraphics();
+//		Graphics2D g = img.createGraphics();
 //		g.setColor(Color.WHITE);
 //		g.drawRect(0, 0, img.getWidth(), img.getHeight());
 //		g.fillRect(0, 0, img.getWidth(), img.getHeight());
@@ -67,23 +83,19 @@ public class Symulation extends SwingWorker<BufferedImage, Void> {
 //				g.fillOval(x, y, 10, 10);
 //			}
 //		}
-		for(int x=0;x<40;x++) {
-			for(int y=0;y<40;y++) {
-				int xpos = img.getWidth()/40*x;
-				int ypos = img.getWidth()/40*y;
-				if(siatka.dane[50][x][y]==1) {
-					g.setColor(Color.BLACK);
-					g.fillOval(xpos, ypos, 10, 10);
-				}
-			}
-		}
-		
-		
-//		g.
-		
-//		simEnd = new Date();
+//		for(int x=0;x<40;x++) {
+//			for(int y=0;y<40;y++) {
+//				int xpos = img.getWidth()/40*x;
+//				int ypos = img.getWidth()/40*y;
+//				if(siatka.dane[50][x][y]==1) {
+//					g.setColor(Color.BLACK);
+//					g.fillOval(xpos, ypos, 10, 10);
+//				}
+//			}
+//		}
+		draw(img);
+		simEnd = new Date();
 		return img;
-//		return null;
 	}
 	
 	protected void done() {

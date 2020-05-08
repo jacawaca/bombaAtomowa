@@ -21,7 +21,7 @@ public class PrawyInfo extends JPanel {
 	private JTextField fieldPower;
 	private TimeTextField timeField;
 	private RunButton runButtom;
-	JLabel infoLabel;
+	JLabel infoLabel, timeLabel;
 	boolean isPolish;
 	
 	private final String 
@@ -34,10 +34,14 @@ public class PrawyInfo extends JPanel {
 		if(isPolish) {
 			timeField.setText(time_eng);
 			infoLabel.setText(info_eng);
+			timeLabel.setText(time_eng);
+			isPolish=false;
 		}
 		else {
 			timeField.setText(time_pl);
 			infoLabel.setText(info_pl);
+			timeLabel.setText(time_pl);
+			isPolish=true;
 		}
 	}
 	
@@ -50,7 +54,7 @@ public class PrawyInfo extends JPanel {
 		fieldPower = new JTextField(Integer.toString(curPower));
 		add(fieldPower);
 		
-		add(new JLabel("Czas trwania symulacji"));
+		timeLabel = new JLabel(time_pl); add(timeLabel);
 		timeField = new TimeTextField();
 		add(timeField);
 		
