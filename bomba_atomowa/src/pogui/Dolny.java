@@ -7,19 +7,26 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class Dolny extends JPanel {
+	private boolean isPolish;
+	final String chColorButtonText_polish = "ZmieÅ„ kolor tÅ‚a",
+			chColorButtonText_english = "Change color of the background";
+//			chLang_polish = "ZmieÅ„ jÄ™zyk", chLang_english="Change ";
 	/**
-	 *  Jacek Strza³kowski
+	 *  Jacek Strzaï¿½kowski
 	 */
 	private static final long serialVersionUID = 1L;
 	JButton chColorBack, chLang, runButton;
 	public Dolny() {
-		
-		this.setLayout(new GridLayout(1, 3));
-		chColorBack = new JButton("Zmieñ kolor t³a"); add(chColorBack);
-		chLang = new JButton("Zmieñ jêzyk"); add(chLang);
+		isPolish = true;
+		setLayout(new GridLayout(1, 3));
+		chColorBack = new JButton(chColorButtonText_polish); add(chColorBack);
+		chLang = new JButton(); add(chLang);
 		runButton = new JButton("START/STOP"); add(runButton);
 		
 		this.setVisible(true);
+	}
+	void changeLanguage() {
+		
 	}
 
 	
