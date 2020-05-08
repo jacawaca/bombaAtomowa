@@ -5,12 +5,17 @@ import java.awt.LayoutManager;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class Dolny extends JPanel {
 	private boolean isPolish;
-	final String chColorButtonText_polish = "Zmień kolor tła",
-			chColorButtonText_english = "Change color of the background";
-//			chLang_polish = "Zmień język", chLang_english="Change ";
+	final String runButton_pl = "Zacznij/Przerwij",
+			runButton_eng = "Start/Stop";
+	JTextField infoSimulation;
+	final String infoDisplay_pl = "Symulacja pokazuje komórki: ", 
+			infoDisplay_eng="The Simulation shows the cells: ";
+	
+			
 	/**
 	 *  Jacek Strza�kowski
 	 */
@@ -19,14 +24,24 @@ public class Dolny extends JPanel {
 	public Dolny() {
 		isPolish = true;
 		setLayout(new GridLayout(1, 3));
-		chColorBack = new JButton(chColorButtonText_polish); add(chColorBack);
-		chLang = new JButton(); add(chLang);
-		runButton = new JButton("START/STOP"); add(runButton);
+//		chColorBack = new JButton(chColorButtonText_polish); add(chColorBack);
+//		chLang = new JButton(chColo); add(chLang);
+		runButton = new JButton(runButton_pl); add(runButton);
+		infoSimulation= new JTextField(infoDisplay_pl); add(infoSimulation);
 		
 		this.setVisible(true);
 	}
 	void changeLanguage() {
-		
+		if(isPolish) {
+			runButton.setText(runButton_eng);
+			infoSimulation.setText(infoDisplay_eng);
+		}
+		else {
+			if(isPolish) {
+				runButton.setText(runButton_pl);
+				infoSimulation.setText(infoDisplay_pl);
+			}
+		}
 	}
 
 	

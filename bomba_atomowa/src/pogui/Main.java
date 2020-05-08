@@ -1,5 +1,5 @@
 package pogui;
-// Jacek Strzałkowski
+// Jacek Strzałkowski Paweł Polak
 // wyrzuciłem niepotrzebne this., przed wywołaniem metody Frame'a
 
 
@@ -9,35 +9,40 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JColorChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 
 public class Main extends JFrame {
-// dddd
-	Centralny centralny;
-	Dolny dolny;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Centralny centralny;
+	private Dolny dolny;
+	private LewyInfo lewy;
+	private PrawyInfo prawy;
+	private MenuBar menu;
+
 	public Main() throws HeadlessException {
-		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		setVisible(true);
-	}
-
-
-	public Main(String title) throws HeadlessException {
-		super(title);
+		super("Model bomby atomowej");
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 //		setSize(500, 500);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(false);
 //		setLayout(new BorderLayout());
+		lewy = new LewyInfo();
+		prawy = new PrawyInfo();
 		
-		
-		add(new LewyInfo(), BorderLayout.LINE_START);
-		add(new PrawyInfo(), BorderLayout.LINE_END);
+		add(lewy, BorderLayout.LINE_START);
+		add(prawy, BorderLayout.LINE_END);
 		centralny = new Centralny();
 		add(centralny, BorderLayout.CENTER);
 		dolny = new Dolny();
 		add(dolny, BorderLayout.PAGE_END);
 		
-		setJMenuBar(new MenuBar());
+		menu = new MenuBar();
+		setJMenuBar(menu);
 		setVisible(true);
 		
 		
@@ -50,13 +55,31 @@ public class Main extends JFrame {
 			}
 		};
 		dolny.runButton.addActionListener(simStart);
+		ActionListener chLanguage = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				lewy.changeLanguage(); prawy.changeLanguage();
+				dolny.changeLanguage();
+			}
+		};
+		
 		
 	}
-
-
+	ActionListener chBackground = new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			JColorChooser chooser = new JColorChooser(centralny.getForeground());
+			centralny.setBackground(chooser.getColor());
+		}
+	};
+	
+	
+	
 	public static void main(String[] args) {
 		// test
-		Main okienko = new Main("Model bomby atomowej");
+		Main okienko = new Main();
 		
 		
 

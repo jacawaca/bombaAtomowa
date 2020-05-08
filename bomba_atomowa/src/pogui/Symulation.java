@@ -54,9 +54,9 @@ public class Symulation extends SwingWorker<BufferedImage, Void> {
 //
 		BufferedImage img = new BufferedImage(centralny.getWidth(), centralny.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = img.createGraphics();
-		g.setColor(Color.WHITE);
+//		g.setColor(Color.WHITE);
 //		g.drawRect(0, 0, img.getWidth(), img.getHeight());
-		g.fillRect(0, 0, img.getWidth(), img.getHeight());
+//		g.fillRect(0, 0, img.getWidth(), img.getHeight());
 //		int dx = img.getWidth(), dy=img.getHeight();
 		// Animacja oddaje losową warstwę na X i kwadrat 1-40x1-40 YxZ
 //		for(int x=0;x<img.getWidth();x+=img.getWidth()/40) {

@@ -18,16 +18,35 @@ public class PrawyInfo extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 53862670099238588L;
-	JTextField fieldPower;
-	TimeTextField timeField;
-	RunButton runButtom;
+	private JTextField fieldPower;
+	private TimeTextField timeField;
+	private RunButton runButtom;
+	JLabel infoLabel;
+	boolean isPolish;
+	
+	private final String 
+			time_pl = "Czas trwania symulacji",
+			time_eng = "Time of simlation",
+			info_pl = "Wydzielona moc",
+			info_eng = "Produced power";
 
+	void changeLanguage() {
+		if(isPolish) {
+			timeField.setText(time_eng);
+			infoLabel.setText(info_eng);
+		}
+		else {
+			timeField.setText(time_pl);
+			infoLabel.setText(info_pl);
+		}
+	}
+	
 	public PrawyInfo() {
+		isPolish=true;
 		setLayout(new GridLayout(5, 1));
-		add(new JLabel("Wydzielona moc"));
+		infoLabel = new JLabel(info_pl);
+		add(infoLabel);
 		int curPower=0;
-		// Jak b�dziemy robi� fizyk�, to zapewne zrobimy osobn� paczk�/klas�
-		// np. "Symulacja", kt�rej parametry b�d� wczytywane do guzik�w
 		fieldPower = new JTextField(Integer.toString(curPower));
 		add(fieldPower);
 		
