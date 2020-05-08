@@ -5,6 +5,7 @@ package pogui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,9 +29,9 @@ public class Symulation extends SwingWorker<BufferedImage, Void> {
 		this.centralny=centralny;
 	}
 	
-	public enum Type{
-		uran, bar, krypton, neutron;
-	}
+//	public enum Type{
+//		uran, bar, krypton, neutron;
+//	}
 	
 	void setMove() {
 		
@@ -50,24 +51,46 @@ public class Symulation extends SwingWorker<BufferedImage, Void> {
 		simBegin = new Date();
 		int nPart = 10000; //temp
 		siatka = new Siatka(nPart, particle);	
-
-		BufferedImage img = new BufferedImage(centralny.getWidth(), centralny.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+//
+		BufferedImage img = new BufferedImage(centralny.getWidth(), centralny.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = img.createGraphics();
-//		for(int x=0;x<20;x++) {
-//			for(int y=0;y<20;y++) {
-//				g.drawRect(x, y, width, height);
+		g.setColor(Color.WHITE);
+//		g.drawRect(0, 0, img.getWidth(), img.getHeight());
+		g.fillRect(0, 0, img.getWidth(), img.getHeight());
+//		int dx = img.getWidth(), dy=img.getHeight();
+		// Animacja oddaje losową warstwę na X i kwadrat 1-40x1-40 YxZ
+//		for(int x=0;x<img.getWidth();x+=img.getWidth()/40) {
+//			for(int y=0;y<img.getWidth();y+=img.getWidth()/40) {
+////				g.drawRect(x, y, width, height);
+//				
+//				g.setColor(Color.BLACK);
+//				g.fillOval(x, y, 10, 10);
 //			}
 //		}
-		g.setColor(Color.black);
-		g.drawRect(100, 100, 10, 10);
+		for(int x=0;x<40;x++) {
+			for(int y=0;y<40;y++) {
+				int xpos = img.getWidth()/40*x;
+				int ypos = img.getWidth()/40*y;
+				if(siatka.dane[50][x][y]==1) {
+					g.setColor(Color.BLACK);
+					g.fillOval(xpos, ypos, 10, 10);
+				}
+			}
+		}
 		
-		simEnd = new Date();
+		
+//		g.
+		
+//		simEnd = new Date();
 		return img;
+//		return null;
 	}
 	
 	protected void done() {
 		try {
-			centralny.paint(get().getGraphics());
+//			centralny.paint(get().getGraphics());
+//			centralny.paintComponent(get().getGraphics());
+			centralny.getGraphics().drawImage(get(), 0, 0, centralny);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 public class Main extends JFrame {
 // dddd
 	Centralny centralny;
+	Dolny dolny;
 	public Main() throws HeadlessException {
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setVisible(true);
@@ -24,7 +25,7 @@ public class Main extends JFrame {
 		super(title);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 //		setSize(500, 500);
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(false);
 //		setLayout(new BorderLayout());
 		
@@ -33,10 +34,12 @@ public class Main extends JFrame {
 		add(new PrawyInfo(), BorderLayout.LINE_END);
 		centralny = new Centralny();
 		add(centralny, BorderLayout.CENTER);
-		add(new Dolny(), BorderLayout.PAGE_END);
+		dolny = new Dolny();
+		add(dolny, BorderLayout.PAGE_END);
 		
 		setJMenuBar(new MenuBar());
 		setVisible(true);
+		
 		
 		ActionListener simStart = new ActionListener() {
 			
@@ -46,6 +49,8 @@ public class Main extends JFrame {
 				symulation.execute();
 			}
 		};
+		dolny.runButton.addActionListener(simStart);
+		
 	}
 
 
