@@ -10,7 +10,7 @@ import java.awt.HeadlessException;
 import javax.swing.JFrame;
 
 public class Main extends JFrame {
-
+// dddd
 	public Main() throws HeadlessException {
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setVisible(true);
