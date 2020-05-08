@@ -9,15 +9,15 @@ import java.awt.HeadlessException;
 
 import javax.swing.JFrame;
 
-public class Frame extends JFrame {
+public class Main extends JFrame {
 
-	public Frame() throws HeadlessException {
+	public Main() throws HeadlessException {
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setVisible(true);
 	}
 
 
-	public Frame(String title) throws HeadlessException {
+	public Main(String title) throws HeadlessException {
 		super(title);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 //		setSize(500, 500);
@@ -39,7 +39,7 @@ public class Frame extends JFrame {
 
 	public static void main(String[] args) {
 		// test
-		Frame okienko = new Frame("Model bomby atomowej");
+		Main okienko = new Main("Model bomby atomowej");
 		
 		
 
