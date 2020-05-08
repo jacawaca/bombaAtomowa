@@ -4,8 +4,8 @@ import java.util.Random;
 
 public class Neutron extends Particle {
 	private double dx, dy, dz;
-	public Neutron(double x, double y, double z, double energy, Random generator) {
-		super(x, y, z, energy, generator);
+	public Neutron(double x, double y, double z, double energy) {
+		super(x, y, z, energy);
 		Neutron.name="Neutron";
 		Neutron.mass=1;
 	}
