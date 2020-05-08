@@ -6,11 +6,14 @@ package pogui;
 import java.awt.BorderLayout;
 import java.awt.GraphicsConfiguration;
 import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 
 public class Main extends JFrame {
 // dddd
+	Centralny centralny;
 	public Main() throws HeadlessException {
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setVisible(true);
@@ -28,12 +31,21 @@ public class Main extends JFrame {
 		
 		add(new LewyInfo(), BorderLayout.LINE_START);
 		add(new PrawyInfo(), BorderLayout.LINE_END);
-		add(new Centralny(), BorderLayout.CENTER);
+		centralny = new Centralny();
+		add(centralny, BorderLayout.CENTER);
 		add(new Dolny(), BorderLayout.PAGE_END);
 		
 		setJMenuBar(new MenuBar());
 		setVisible(true);
 		
+		ActionListener simStart = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Symulation symulation = new Symulation(centralny);
+				symulation.execute();
+			}
+		};
 	}
 
 
