@@ -5,7 +5,6 @@ package pogui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,35 +25,51 @@ public class Symulation extends SwingWorker<BufferedImage, Void> {
 	private final int showedX = 50, showedYmin = 0, showedYmax = 40,
 			showedZmin = 0, showedZmax=40;
 	private Centralny centralny;
+	private BufferedImage imageSimulation;
 	
 	public Symulation(Centralny centralny) {
+		if(uraniumColor==null)  uraniumColor = Color.RED; //w przyszłości zrobimy lepszy
+		if(backgroundColor==null) backgroundColor = Color.WHITE; //mechanizm
 		this.centralny=centralny;
 	}
+	
+	private static Color uraniumColor, backgroundColor;
 	
 //	public enum Type{
 //		uran, bar, krypton, neutron;
 //	}
 	
-	void setMove() { //TODO
-		
+	void changeBackgroundColor(Color colorBackground) {
+		backgroundColor = colorBackground;
+//		draw();
 	}
 	
-	void explotion() { //TODO cząstka jako arg
-		
-	}
 	
-	void setToExpl() { //TODO
-		
-	}
+//	
+//	void setMove() { //TODO
+//		
+//	}
+//	
+//	void explotion() { //TODO cząstka jako arg
+//		
+//	}
+//	
+//	void setToExpl() { //TODO
+//		
+//	}
 	
-	void draw(BufferedImage img) {
-		Graphics2D g = img.createGraphics();
+	void draw() {
+		imageSimulation = new BufferedImage(centralny.getWidth(),
+				centralny.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = imageSimulation.createGraphics();
+		g.setColor(backgroundColor);
+		g.fillRect(0, 0, imageSimulation.getWidth(), imageSimulation.getHeight());
 		for(int y=showedYmin;y<showedYmax;y++) {
 			for(int z=showedZmin;z<showedZmax;z++) {
-				int ypos = img.getWidth()/showedYmax*y;
-				int zpos = img.getWidth()/showedZmax*z;
+				int ypos = imageSimulation.getWidth()/showedYmax*y;
+				int zpos = imageSimulation.getWidth()/showedZmax*z;
 				if(siatka.dane[showedX][y][z]==1) {
-					g.setColor(Color.BLACK);
+					g.setColor(uraniumColor);
 					g.fillOval(ypos, zpos, 10, 10);
 				}
 			}
@@ -66,48 +81,19 @@ public class Symulation extends SwingWorker<BufferedImage, Void> {
 		particle = new ArrayList<Particle>();
 		simBegin = new Date();
 		int nPart = 10000; //temp
-		siatka = new Siatka(nPart, particle);	
-//
-		BufferedImage img = new BufferedImage(centralny.getWidth(), centralny.getHeight(), BufferedImage.TYPE_INT_ARGB);
-//		Graphics2D g = img.createGraphics();
-//		g.setColor(Color.WHITE);
-//		g.drawRect(0, 0, img.getWidth(), img.getHeight());
-//		g.fillRect(0, 0, img.getWidth(), img.getHeight());
-//		int dx = img.getWidth(), dy=img.getHeight();
-		// Animacja oddaje losową warstwę na X i kwadrat 1-40x1-40 YxZ
-//		for(int x=0;x<img.getWidth();x+=img.getWidth()/40) {
-//			for(int y=0;y<img.getWidth();y+=img.getWidth()/40) {
-////				g.drawRect(x, y, width, height);
-//				
-//				g.setColor(Color.BLACK);
-//				g.fillOval(x, y, 10, 10);
-//			}
-//		}
-//		for(int x=0;x<40;x++) {
-//			for(int y=0;y<40;y++) {
-//				int xpos = img.getWidth()/40*x;
-//				int ypos = img.getWidth()/40*y;
-//				if(siatka.dane[50][x][y]==1) {
-//					g.setColor(Color.BLACK);
-//					g.fillOval(xpos, ypos, 10, 10);
-//				}
-//			}
-//		}
-		draw(img);
+		siatka = new Siatka(nPart, particle);
+
+		draw();
 		simEnd = new Date();
-		return img;
+		return imageSimulation;
 	}
 	
 	protected void done() {
 		try {
-//			centralny.paint(get().getGraphics());
-//			centralny.paintComponent(get().getGraphics());
 			centralny.getGraphics().drawImage(get(), 0, 0, centralny);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

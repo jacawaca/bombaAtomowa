@@ -56,7 +56,7 @@ public class Siatka {
 		return nX;
 	}
 	
-	/** Kod ze strony https://javer.org/losowanie-bez-zwracania-java/ Można???
+	/** Kod ze strony https://javer.org/losowanie-bez-zwracania-java/
      * Zwraca tablicę k liczb wybraych losowo z tablicy od 1 do n liczb bez
      * zwracania (powtórzeń)
      * @param k      int - liczba wybieranych liczb

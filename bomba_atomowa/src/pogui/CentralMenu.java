@@ -68,13 +68,14 @@ public class CentralMenu extends JMenuBar implements ActionListener{
 		menukolorow.addSeparator();
 		
 		backMenu = new JMenuItem("Tlo");
-                backMenu.setActionCommand("tlo");
-                backMenu.addActionListener(this);
+//                backMenu.setActionCommand("tlo");
+//                backMenu.addActionListener(this);
 		menukolorow.add(backMenu);
 		menukolorow.addSeparator();
-		
+//		
 		chBackground = new JMenuItem("Zmień tło na panelu");
-		backMenu.add(chBackground);
+//		backMenu.add(chBackground);
+		menukolorow.add(chBackground);
 	/*	
 		JMenu newMenu = new JMenu("Nowy Plik");
 		menuLook.add(newMenu);
@@ -97,35 +98,35 @@ public class CentralMenu extends JMenuBar implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        if(e.getActionCommand() == "tlo")
-{
-                setSize(1000, 640);
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		
-		//color chooser
-		colorFrame = new JFrame();
-                colorFrame.setVisible(true);
-		colorFrame.setSize(640, 480);
-		colorFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		colorChooser = new JColorChooser();
-		colorFrame.add(colorChooser, BorderLayout.CENTER);
-		JButton ok = new JButton("OK");
-		//panelNumber = 2;
-		ActionListener okListener = new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-                            
-					centerPanel.setBackground(colorChooser.getColor());
-					colorFrame.dispose();
-                                    }
-				
-			};
-		ok.addActionListener(okListener);
-		colorFrame.add(ok, BorderLayout.PAGE_END);
-                centerPanel = new JPanel();
-                add(centerPanel, BorderLayout.CENTER);
-}
+//        if(e.getActionCommand() == "tlo")
+//{
+//                setSize(1000, 640);
+//		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+//		
+//		//color chooser
+//		colorFrame = new JFrame();
+//                colorFrame.setVisible(true);
+//		colorFrame.setSize(640, 480);
+//		colorFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+//		colorChooser = new JColorChooser();
+//		colorFrame.add(colorChooser, BorderLayout.CENTER);
+//		JButton ok = new JButton("OK");
+//		//panelNumber = 2;
+//		ActionListener okListener = new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//                            
+//					centerPanel.setBackground(colorChooser.getColor());
+//					colorFrame.dispose();
+//                                    }
+//				
+//			};
+//		ok.addActionListener(okListener);
+//		colorFrame.add(ok, BorderLayout.PAGE_END);
+//                centerPanel = new JPanel();
+//                add(centerPanel, BorderLayout.CENTER);
+//}
     }
     private void setDefaultCloseOperation(int DISPOSE_ON_CLOSE) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

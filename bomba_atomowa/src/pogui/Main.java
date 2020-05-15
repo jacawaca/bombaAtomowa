@@ -2,6 +2,7 @@ package pogui;
 // Paweł Polak
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GraphicsConfiguration;
 import java.awt.HeadlessException;
 import java.awt.MenuBar;
@@ -22,6 +23,7 @@ public class Main extends JFrame {
 	private LewyInfo lewy;
 	private PrawyInfo prawy;
 	private CentralMenu menu;
+	private Symulation curSymulation;
 //	private M
 
 	public Main() throws HeadlessException {
@@ -48,10 +50,10 @@ public class Main extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Symulation symulation = new Symulation(centralny);
+				curSymulation = new Symulation(centralny);
 				centralny.repaint();
 				centralny.revalidate();
-				symulation.execute();
+				curSymulation.execute();
 			}
 		};
 		dolny.runButton.addActionListener(simStart);
@@ -73,18 +75,26 @@ public class Main extends JFrame {
 		
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			JColorChooser chooser = new JColorChooser(centralny.getForeground());
-			centralny.setBackground(chooser.getColor());
+			Color changeBackgroundColor = JColorChooser.showDialog(null, "Wybierz kolor tła",
+					centralny.getForeground());
+			if(changeBackgroundColor!=null) {
+				curSymulation.changeBackgroundColor(changeBackgroundColor);
+				curSymulation = new Symulation(centralny);
+				centralny.repaint();
+				centralny.revalidate();
+				curSymulation.execute();
+
+			}
 		}
 	};
-	ActionListener chUraniumColor = new ActionListener() {
-		
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			
-			
-		}
-	};
+//	ActionListener chUraniumColor = new ActionListener() {
+//		
+//		@Override
+//		public void actionPerformed(ActionEvent arg0) {
+//			
+//			
+//		}
+//	};
 	
 	
 	public static void main(String[] args) {
