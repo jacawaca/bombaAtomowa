@@ -24,20 +24,33 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	private Siatka siatka;
 	private List<Particle> particles;// = new ArrayList<Particle>();
 	private List<Neutron> neutrons;
-	private double allMasa;
-	private final int dim=100;
+//	private double allMasa;
+	private final int dim=100; //Wymiar SIATKI
 	
 	private final double activeRadius = 5;
 	
-	private final int nNeutronow=5;
 	
 	private final int showedX = 50, showedYmin = 0, showedYmax = 40,
 			showedZmin = 0, showedZmax=40;
 	private Centralny centralny;
 	private BufferedImage imageSimulation;
 	
-	private final double pExplosion=0.01,
-			pChangeMove=0.3, pSelfExplosion=0.01;
+	private double pExplosion=0.01;
+	private final double pChangeMove=0.3, pSelfExplosion=0.01;
+
+	
+	
+	public void setpExplosion(double pExplosion) {
+		this.pExplosion = pExplosion;
+	}
+	
+	private int nNeutronow = 4;
+	public int getnNeutronow() {
+		return nNeutronow;
+	}
+	public void setnNeutronow(int nNeutronow) {
+		this.nNeutronow = nNeutronow;
+	}
 	
 	private boolean isRunning;
 	public boolean isRunning() {
@@ -46,6 +59,16 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	public void setRunning(boolean isRunning) {
 		this.isRunning = isRunning;
 	}
+
+	private boolean is2Stop;
+	public boolean isStopped() {
+		return is2Stop;
+	}
+
+	public void setStopped(boolean isStopped) {
+		this.is2Stop = isStopped;
+	}
+
 	
 	public Symulation(Centralny centralny) {
 		isRunning = false;
@@ -109,7 +132,7 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 //	
 	void selfExplosion(Uran uran) {
 		uran.setExplAble(false);
-		for(int i=0;i<nNeutronow;i++) {
+		for(int i=0;i<getnNeutronow();i++) {
 			Neutron neutron = new Neutron(uran.x, uran.y, uran.z, 0.1);
 			neutron.setDirection(i, i+1, i-1); //Los na razie
 			neutrons.add(neutron);
@@ -216,25 +239,30 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 				+ " Krypton"+nKrypton+" DEAN URAN "+nDeadUran);
 	}
 	
+	
 	@Override
 	protected BufferedImage doInBackground() throws Exception {
 		System.out.println("Myk działa");
-		isRunning=true;
+		isRunning=true; is2Stop=false;
 		if(particles ==null || simBegin ==null || neutrons ==null) {
 			particles = new ArrayList<Particle>();
 			neutrons = new ArrayList<Neutron>();
 			simBegin = new Date();
 		}
-		int nPart = 10000; //temp
-		while(isRunning) {
+		nParticles = 50000; //temp
+		while(isRunning && !is2Stop) {
 			TimeUnit.MILLISECONDS.sleep(10);
 			setMove();
 			setToSelfExplosion();
 			setToExpl();
-			siatka = new Siatka(nPart, particles);
+			siatka = new Siatka(nParticles, particles);
 			draw();
 			publish(imageSimulation);
 			info();
+//			System.out.println("P rozpadu: "+pExplosion+"\nNNeutronow: "+nNeutronow+" nUranów: "+ nParticles);
+			while(!isRunning) {
+				TimeUnit.MILLISECONDS.sleep(100);
+			}
 		}
 		return imageSimulation;
 	}
@@ -263,6 +291,14 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 			centralny.setImg(img);
 			centralny.repaint();
 		}
+	}
+	
+	private static int nParticles;
+	public int getnParticles() {
+		return nParticles;
+	}
+	public void setnParticles(int nParticles) {
+		Symulation.nParticles = nParticles;
 	}
 	
 	

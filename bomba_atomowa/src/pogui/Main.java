@@ -1,5 +1,5 @@
 package pogui;
-// Paweł Polak
+// Paweł Polak Jacek Strzałkowski
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -12,8 +12,11 @@ import java.awt.event.ActionListener;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class Main extends JFrame {
+public class Main extends JFrame implements ChangeListener{
 	/**
 	 * 
 	 */
@@ -52,11 +55,15 @@ public class Main extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if(curSymulation ==null) {
 					curSymulation = new Symulation(centralny);
+					
+					curSymulation.setnNeutronow(lewy.nNeutronow.getValue() );
+					curSymulation.setpExplosion((double)lewy.pRozpadu.getValue()/1000);
+					curSymulation.setnParticles(lewy.nAtomow.getValue());
 					curSymulation.execute();
 				}
 				else {
 					if(!curSymulation.isRunning()) {
-						System.out.println("DDD");
+						System.out.println("Pauza");
 					curSymulation.setRunning(true);
 					curSymulation.execute();
 					}
@@ -79,12 +86,42 @@ public class Main extends JFrame {
 		menu.chLang.addActionListener(chLanguage);
 		
 		menu.chBackground.addActionListener(chBackground);
+		
+		lewy.pRozpadu.setListener(this);
+		lewy.nNeutronow.setListener(this);
+		lewy.nAtomow.setListener(this);
+//		
+//		lewy.nNeutronow.setListener(new ChangeListener() { //Zmiana wypadających neutronów
+//			@Override
+//			public void stateChanged(ChangeEvent e) {
+//				JSlider source = (JSlider) e.getSource();
+//				System.out.println("DODANO");
+//				if(!source.getValueIsAdjusting()) {
+//					curSymulation.setnNeutronow(source.getValue());
+//				}
+//			}
+//		});
+//		lewy.pRozpadu.setListener(new ChangeListener() {			// zmiana prawdopodobieństwa rozpadu
+//			@Override
+//			public void stateChanged(ChangeEvent e) {
+//				JSlider source = (JSlider) e.getSource();
+//				if(!source.getValueIsAdjusting()) {
+//					if(source.getValue()>100 || source.getValue()<0) System.exit(1);
+//					curSymulation.setpExplosion( source.getValue());
+//				}
+//			}
+//		});
+		
+		
 	}
+
+		
+
 	
 	ActionListener chBackground = new ActionListener() {
 		
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
+		public void actionPerformed(ActionEvent arg0) { //TODO check
 			Color changeBackgroundColor = JColorChooser.showDialog(null, "Wybierz kolor tła",
 					centralny.getForeground());
 			if(changeBackgroundColor!=null) {
@@ -110,9 +147,30 @@ public class Main extends JFrame {
 	public static void main(String[] args) {
 		// test
 		Main okienko = new Main();
-		
-		
+	
 
+	}
+	@Override
+	public void stateChanged(ChangeEvent e) {
+	if(curSymulation!=null) {
+		if(e.getSource() == lewy.pRozpadu.getValueSlider()) {
+//			if(!((JSlider) e.getSource()).getValueIsAdjusting()) 
+			curSymulation.setpExplosion((double)lewy.pRozpadu.getValue()/1000);
+			lewy.pRozpadu.setText();
+		}
+		if(e.getSource() == lewy.nNeutronow.getValueSlider()) {
+//			if(!((JSlider) e.getSource()).getValueIsAdjusting()) 
+				curSymulation.setnNeutronow(lewy.nNeutronow.getValue() );
+				lewy.nNeutronow.setText();
+			
+		}
+		if(e.getSource() == lewy.nAtomow.getValueSlider()) {
+//			if(!((JSlider) e.getSource()).getValueIsAdjusting()) 
+			curSymulation.setnParticles(lewy.nAtomow.getValue());
+			lewy.nAtomow.setText();
+		}
+	}
+		
 	}
 
 }
