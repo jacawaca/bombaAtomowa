@@ -2,13 +2,19 @@ package pogui;
 
 import java.util.Random;
 
-public class Neutron extends Particle {
-	private double dx, dy, dz;
+public class Neutron{
 	public Neutron(double x, double y, double z, double energy) {
-		super(x, y, z, energy);
-		Neutron.name="Neutron";
-		Neutron.mass=1;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.energy = energy;
+//		System.out.print("Jestem neutronem na"+x+"  "+y+"  "+z+"\n");
 	}
+	protected final double mass=1;
+	protected final String name="Neutron";
+	private double dx, dy, dz;
+	private double x,y,z, energy;
+	
 	
 	void setDirection(double dx,double  dy,double  dz) {
 		this.dx=dx;

@@ -17,10 +17,19 @@ public abstract class Particle {
 	protected static double mass;
 	protected static String name;
 	protected Date beginLife, endLife; //Rejestr życia cząsteczki -> odtworzenie animacji
-	protected double energy, x, y, z;//, dx, dy, dz;
-
+	protected double energy;//, dx, dy, dz;
+	protected int  x, y, z;
+	public int getX() {
+		return x;
+	}
+	public int getY() {
+		return y;
+	}
+	public int getZ() {
+		return z;
+	}
 	
-	public Particle(double x, double y, double z, double energy) {
+	public Particle(int x, int y, int z, double energy) {
 		beginLife = new Date();
 		this.x=x;
 		this.y=y;
@@ -35,6 +44,12 @@ public abstract class Particle {
 	public void death() {
 		endLife= new Date();
 	}
-	
+	private boolean isExplAble;
+	public boolean isExplAble() {
+		return isExplAble;
+	}
+	public void setExplAble(boolean isExplAble) {
+		this.isExplAble = isExplAble;
+	}
 	
 }

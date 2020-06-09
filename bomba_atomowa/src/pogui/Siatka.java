@@ -8,12 +8,16 @@ import java.util.Random;
 public class Siatka {
 	final int dim=100;
 	final int uranMass=232;
-	int dane[][][];
+	byte dane[][][];
 	final double energiaUran = 100;
+	private Random random;//Każda siatka ma swój własny…
 	
-	private List<Particle> particle; //= new ArrayList<Particle>();
+	private final double pExplosion=0.01,
+			pChangeMove=0.01;
 	
-	void setAll(int q) {
+	private List<Particle> particles; //= new ArrayList<Particle>();
+	
+	void setAll(byte q) {
 		for(int i=0;i<dim;i++) {
 			for(int j=0;j<dim;j++) {
 				for(int r=0;r<dim;r++) {
@@ -89,9 +93,24 @@ public class Siatka {
         return wynik;
     }
     //Koniec 
+//    
+//    void setToExpl() { //TODO
+//    	for(int i=0;i<dim;i++) {
+//			for(int j=0;j<dim;j++) {
+//				for(int r=0;r<dim;r++) {
+//					if(Math.random()<pExplosion && dane[i][j][r]==1) {
+//						explosion(uran);
+//					}
+//					
+//				}
+//			}
+//		}
+//	}
+
+    
 	
 	void losuj(int nCzastek) { //można ulepszyć mechanizm,
-		setAll(0);
+//		setAll((byte) 0); //Można zrezygnować
 		int nX[] = distribute(nCzastek);
 		System.out.println("\n");
 		for(int i =0;i<dim;i++) {
@@ -101,19 +120,51 @@ public class Siatka {
 				for(int q=0;q<randPosition.length;q++) {
 					if(i > 100 || j>100) System.err.print("Błąd");
 					dane[i][j][randPosition[q]]=1;
-					particle.add(new Uran(i,j,randPosition[q],100.1));
+					particles.add(new Uran(i,j,randPosition[q],100.1));
 				}
 			}
 		}
 		}
 		
+	void actualize() {
+		for(Particle p: particles) {
+//			setAll((byte) 0);
+			if(p.getClass() == Uran.class) {
+				dane[p.getX()][p.getY()][p.getZ()]=1;
+			}
+			else if(p.getClass()==Krypton.class) {
+				dane[p.getX()][p.getY()][p.getZ()]=2;
+			}
+			else if (p.getClass() == Bar.class) {
+				dane[p.getX()][p.getY()][p.getZ()]=3;
+			}
+		}
+		
+//		for(int i=0;i<dim;i++) {
+//			for(int j=0;j<dim;j++) {
+//				for(int r=0;r<dim;r++) {
+//					if(particles)
+//					dane[i][j][r]=q;
+//				}
+//			}
+//		}
+	}
 		
 	
 	public Siatka(int nParticles, List<Particle> particles) {
-		this.particle=particles;
-		dane = new int[dim][dim][dim];
+		this.particles=particles;
+		dane = new byte[dim][dim][dim];
+		if(particles.isEmpty()) {
+			losuj(nParticles);
+		}
+		else {
+			actualize();
+		}
+		
+		random = new Random();
+		
 //		int nParticles = 10000;
-		losuj(nParticles);
+		
 		
 	}
 
