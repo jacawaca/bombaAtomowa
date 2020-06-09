@@ -50,10 +50,20 @@ public class Main extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				curSymulation = new Symulation(centralny);
-				centralny.repaint();
-				centralny.revalidate();
-				curSymulation.execute();
+				if(curSymulation ==null) {
+					curSymulation = new Symulation(centralny);
+					curSymulation.execute();
+				}
+				else {
+					if(!curSymulation.isRunning()) {
+						System.out.println("DDD");
+					curSymulation.setRunning(true);
+					curSymulation.execute();
+					}
+					else {
+						curSymulation.setRunning(false);
+					}
+				}
 			}
 		};
 		dolny.runButton.addActionListener(simStart);

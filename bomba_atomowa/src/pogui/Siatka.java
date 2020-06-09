@@ -129,25 +129,21 @@ public class Siatka {
 	void actualize() {
 		for(Particle p: particles) {
 //			setAll((byte) 0);
-			if(p.getClass() == Uran.class) {
-				dane[p.getX()][p.getY()][p.getZ()]=1;
+			System.out.println(p.getClass().getName());
+			if(p instanceof Uran) {
+				if(p.isExplAble()) dane[p.getX()][p.getY()][p.getZ()]=1;
+				else dane[p.getX()][p.getY()][p.getZ()]=4;
 			}
-			else if(p.getClass()==Krypton.class) {
+			else if(p instanceof Krypton) {
+//				System.out.println("KRYPTON");
 				dane[p.getX()][p.getY()][p.getZ()]=2;
 			}
-			else if (p.getClass() == Bar.class) {
+			else if (p instanceof Bar) {
 				dane[p.getX()][p.getY()][p.getZ()]=3;
 			}
 		}
 		
-//		for(int i=0;i<dim;i++) {
-//			for(int j=0;j<dim;j++) {
-//				for(int r=0;r<dim;r++) {
-//					if(particles)
-//					dane[i][j][r]=q;
-//				}
-//			}
-//		}
+
 	}
 		
 	
@@ -158,6 +154,7 @@ public class Siatka {
 			losuj(nParticles);
 		}
 		else {
+			System.out.println("MYK");
 			actualize();
 		}
 		

@@ -8,6 +8,7 @@ public class Krypton extends Particle {
 		super(x, y, z, energy);
 		setExplAble(false);
 		Krypton.name="Krypton";
+//		System.out.println("KRY");
 		Krypton.mass=83.798;
 	}
 

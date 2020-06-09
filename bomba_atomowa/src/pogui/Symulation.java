@@ -34,7 +34,7 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	private BufferedImage imageSimulation;
 	
 	private final double pExplosion=0.01,
-			pChangeMove=0.01, pSelfExplosion=0.01;
+			pChangeMove=0.3, pSelfExplosion=0;
 	
 	private boolean isRunning;
 	public boolean isRunning() {
@@ -45,6 +45,7 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	}
 	
 	public Symulation(Centralny centralny) {
+		isRunning = false;
 		if(uraniumColor==null)  uraniumColor = Color.RED; //w przyszłości zrobimy lepszy
 		if(backgroundColor==null) backgroundColor = Color.WHITE; //mechanizm
 		if(barColor ==null) barColor = Color.GREEN;
@@ -67,20 +68,35 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	
 	
 	void setMove() { //TODO
+//		System.out.println("RUCH");
 		for(Neutron n: neutrons) {
 			if(Math.random()<pChangeMove) {
-				double vTotal = 1;
+				double vTotal = 10;
 				double xShare = Math.random(), yShare = Math.random()*xShare,
 						zShare = 1-xShare-yShare;
 				n.setDirection(vTotal*xShare, vTotal*yShare, zShare*vTotal);
 			}
+			if(n.getX()>dim || n.getX()<0) {n.setDx(-n.getDx());};
+			if(n.getY()>dim || n.getY()<0) {n.setDy(-n.getDy());
+			if(n.getZ()>dim || n.getZ()<0) {n.setDz(-n.getDz());
+			}
+			}
+			//Przesuwanie się !!!
+			n.move();
 		}
 	}
 	
-	void explosion(Uran uran) {
-		Krypton krypton = new Krypton(uran.x, uran.y, uran.z, 0.1); //ENERGIA!!
-		Bar bar = new Bar(uran.x+1, uran.y+1, uran.z+1, 0.1);
-		particles.add(bar); particles.add(krypton);
+	void explosion(Particle uran, List<Particle> addParticles) {
+		if(particles==null) {System.exit(1);}
+		uran.death();
+		Krypton krypton = new Krypton(uran.x, uran.y, uran.z, 0.1);
+//		uran = new Krypton(uran.x, uran.y, uran.z, 0.1);
+//		particles.remove(uran);
+//		particles.add(uran);
+//		particles.add(krypton);//ENERGIA!!
+//		Bar bar = new Bar(uran.x+1, uran.y+1, uran.z+1, 0.1);
+//		particles.add(bar); 
+		addParticles.add(krypton); //addParticles.add(bar);
 		for(int i=0;i<3;i++) {
 			Neutron neutron = new Neutron(uran.x, uran.y, uran.z, 0.1);
 			neutron.setDirection(i, i+1, i-1); //Los na razie
@@ -88,27 +104,36 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 		}
 	}
 //	
-	void selfExplosion(Uran uran) { //TODO cząstka jako arg
+	void selfExplosion(Uran uran) {
 		uran.setExplAble(false);
 		for(int i=0;i<nNeutronow;i++) {
 			Neutron neutron = new Neutron(uran.x, uran.y, uran.z, 0.1);
 			neutron.setDirection(i, i+1, i-1); //Los na razie
 			neutrons.add(neutron);
 		}
-		
+		System.out.println("DUPA");
 	}
 //	
 	void setToExpl() { //TODO
-		for(Particle p: particles) {
-			if(p.getClass()==Uran.class && Math.random()<pExplosion )  {
-					explosion((Uran) p);
+		List<Particle> addParticles = new ArrayList<Particle>();
+		List<Particle> toRemoveUranium = new ArrayList<Particle>();
+		for(Particle p: particles) {	
+			if(p.isExplAble() && Math.random()<pExplosion )  {
+					toRemoveUranium.add(p);
+					explosion(p, addParticles);
+					System.out.println("TUTAJ");
 				}
 			}
+		particles.removeAll(toRemoveUranium);
+		particles.addAll(addParticles);
+//		for(Particle p :addParticles) {
+//			particles.add(p);
+//		}s
 	}
 	
 	void setToSelfExplosion() {
 		for(Particle p: particles) {
-			if(p.isExplAble() &&  Math.random()<pExplosion )  {
+			if(p.isExplAble() &&  Math.random()<pSelfExplosion)  {
 					selfExplosion((Uran) p);
 				}
 			}
@@ -124,6 +149,9 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 		else if(danaP==3) {
 			g.setColor(barColor);
 		}
+		else if(danaP==4) {
+			g.setColor(deadUraniumColor);
+		}
 		else {
 			return;
 		}
@@ -134,8 +162,8 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 		g.setColor(Color.BLUE);
 		int ypos = (int) (imageSimulation.getWidth()/(showedYmax-showedYmin)*n.getY());
 		int zpos = (int) (imageSimulation.getWidth()/(showedZmax-showedZmin)*n.getZ());
-		System.out.println("JESTEM RYSOWANY na "+n.getX()+
-				" i "+n.getY());
+//		System.out.println("JESTEM RYSOWANY na "+n.getX()+
+//				" i "+n.getY());
 		g.fillOval(
 				ypos,
 				zpos
@@ -165,22 +193,35 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 		}
 	}
 	
+	void info() {
+		int doRozpadu=0;
+		for(Particle p : particles) {
+			if(p.isExplAble()) doRozpadu++;
+		}
+		System.out.println("Się rozpadło "+doRozpadu+" "
+				+ "Pozostało"+(particles.size()-doRozpadu));
+	}
+	
 	@Override
 	protected BufferedImage doInBackground() throws Exception {
+		System.out.println("Myk działa");
+		isRunning=true;
 		if(particles ==null || simBegin ==null || neutrons ==null) {
 			particles = new ArrayList<Particle>();
 			neutrons = new ArrayList<Neutron>();
 			simBegin = new Date();
 		}
 		int nPart = 10000; //temp
-		for(int i=0;i<10000000;i++) {
+		while(isRunning) {
 			TimeUnit.MILLISECONDS.sleep(10);
+			setMove();
 			setToSelfExplosion();
+			setToExpl();
 			siatka = new Siatka(nPart, particles);
-//			System.out.println("D");
 			draw();
 			publish(imageSimulation);
-		}	
+			info();
+		}
 		return imageSimulation;
 	}
 	
@@ -207,9 +248,6 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 //			centralny.getGraphics().drawImage(img, 0, 0, centralny);
 			centralny.setImg(img);
 			centralny.repaint();
-//			centralny.revalidate();
-//			centralny.repaint();
-//			centralny.revalidate();
 		}
 	}
 	
