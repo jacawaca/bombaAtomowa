@@ -6,6 +6,7 @@ package pogui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+//import java.lang.FdLibm.Pow;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +27,8 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	private double allMasa;
 	private final int dim=100;
 	
+	private final double activeRadius = 5;
+	
 	private final int nNeutronow=5;
 	
 	private final int showedX = 50, showedYmin = 0, showedYmax = 40,
@@ -34,7 +37,7 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	private BufferedImage imageSimulation;
 	
 	private final double pExplosion=0.01,
-			pChangeMove=0.3, pSelfExplosion=0;
+			pChangeMove=0.3, pSelfExplosion=0.01;
 	
 	private boolean isRunning;
 	public boolean isRunning() {
@@ -111,24 +114,32 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 			neutron.setDirection(i, i+1, i-1); //Los na razie
 			neutrons.add(neutron);
 		}
-		System.out.println("DUPA");
+//		System.out.println("DUPA");
 	}
 //	
+	boolean isSurrounded(Particle p) {
+		for(Neutron n: neutrons) {
+			double rx = n.getX()-p.getX(),
+					ry = n.getY() - p.getY(),
+					rz = n.getZ() - p.getZ();
+			if(Math.sqrt(
+					Math.pow(rx, 2)+Math.pow(ry, 2)+Math.pow(rz, 2))<activeRadius)
+				return true;
+		}
+		return false;
+	}
+	
 	void setToExpl() { //TODO
 		List<Particle> addParticles = new ArrayList<Particle>();
 		List<Particle> toRemoveUranium = new ArrayList<Particle>();
 		for(Particle p: particles) {	
-			if(p.isExplAble() && Math.random()<pExplosion )  {
+			if(p.isExplAble() && Math.random()<pExplosion && isSurrounded(p) )  {
 					toRemoveUranium.add(p);
 					explosion(p, addParticles);
-					System.out.println("TUTAJ");
 				}
 			}
 		particles.removeAll(toRemoveUranium);
 		particles.addAll(addParticles);
-//		for(Particle p :addParticles) {
-//			particles.add(p);
-//		}s
 	}
 	
 	void setToSelfExplosion() {
@@ -194,12 +205,15 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	}
 	
 	void info() {
-		int doRozpadu=0;
+		int doRozpadu=0, nBar=0, nDeadUran=0, nKrypton=0;
 		for(Particle p : particles) {
 			if(p.isExplAble()) doRozpadu++;
+			else if(p instanceof Bar) nBar++;
+			else if(p instanceof Uran) nDeadUran++;
+			else if(p instanceof Krypton) nKrypton++;
 		}
-		System.out.println("Się rozpadło "+doRozpadu+" "
-				+ "Pozostało"+(particles.size()-doRozpadu));
+		System.out.println("Żywe urany: "+doRozpadu+" Bar: "+nBar
+				+ " Krypton"+nKrypton+" DEAN URAN "+nDeadUran);
 	}
 	
 	@Override

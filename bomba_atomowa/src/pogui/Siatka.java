@@ -94,23 +94,11 @@ public class Siatka {
     }
     //Koniec 
 //    
-//    void setToExpl() { //TODO
-//    	for(int i=0;i<dim;i++) {
-//			for(int j=0;j<dim;j++) {
-//				for(int r=0;r<dim;r++) {
-//					if(Math.random()<pExplosion && dane[i][j][r]==1) {
-//						explosion(uran);
-//					}
-//					
-//				}
-//			}
-//		}
-//	}
+
 
     
 	
 	void losuj(int nCzastek) { //można ulepszyć mechanizm,
-//		setAll((byte) 0); //Można zrezygnować
 		int nX[] = distribute(nCzastek);
 		System.out.println("\n");
 		for(int i =0;i<dim;i++) {
@@ -128,14 +116,11 @@ public class Siatka {
 		
 	void actualize() {
 		for(Particle p: particles) {
-//			setAll((byte) 0);
-			System.out.println(p.getClass().getName());
 			if(p instanceof Uran) {
 				if(p.isExplAble()) dane[p.getX()][p.getY()][p.getZ()]=1;
 				else dane[p.getX()][p.getY()][p.getZ()]=4;
 			}
 			else if(p instanceof Krypton) {
-//				System.out.println("KRYPTON");
 				dane[p.getX()][p.getY()][p.getZ()]=2;
 			}
 			else if (p instanceof Bar) {
@@ -154,7 +139,7 @@ public class Siatka {
 			losuj(nParticles);
 		}
 		else {
-			System.out.println("MYK");
+//			System.out.println("MYK");
 			actualize();
 		}
 		
