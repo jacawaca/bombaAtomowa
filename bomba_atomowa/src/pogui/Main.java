@@ -8,13 +8,23 @@ import java.awt.HeadlessException;
 import java.awt.MenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYSeriesCollection;
 
 public class Main extends JFrame implements ChangeListener{
 	/**
@@ -54,7 +64,7 @@ public class Main extends JFrame implements ChangeListener{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(curSymulation ==null) {
-					curSymulation = new Symulation(centralny);
+					curSymulation = new Symulation(centralny, prawy);
 					
 					curSymulation.setnNeutronow(lewy.nNeutronow.getValue() );
 					curSymulation.setpExplosion((double)lewy.pRozpadu.getValue()/1000);
@@ -90,28 +100,73 @@ public class Main extends JFrame implements ChangeListener{
 		lewy.pRozpadu.setListener(this);
 		lewy.nNeutronow.setListener(this);
 		lewy.nAtomow.setListener(this);
-//		
-//		lewy.nNeutronow.setListener(new ChangeListener() { //Zmiana wypadających neutronów
-//			@Override
-//			public void stateChanged(ChangeEvent e) {
-//				JSlider source = (JSlider) e.getSource();
-//				System.out.println("DODANO");
-//				if(!source.getValueIsAdjusting()) {
-//					curSymulation.setnNeutronow(source.getValue());
-//				}
-//			}
-//		});
-//		lewy.pRozpadu.setListener(new ChangeListener() {			// zmiana prawdopodobieństwa rozpadu
-//			@Override
-//			public void stateChanged(ChangeEvent e) {
-//				JSlider source = (JSlider) e.getSource();
-//				if(!source.getValueIsAdjusting()) {
-//					if(source.getValue()>100 || source.getValue()<0) System.exit(1);
-//					curSymulation.setpExplosion( source.getValue());
-//				}
-//			}
-//		});
 		
+		menu.drawPlot.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(curSymulation == null) {
+					JOptionPane.showMessageDialog(null, "Nie rozpoczęto symulacji, zatem nie ma na czym rysować wykresu.");
+					return ;
+				}
+				else {
+					XYSeriesCollection dataset = new XYSeriesCollection();
+					dataset.addSeries(curSymulation.getTimevsPowerSeries());
+					JFreeChart chart = ChartFactory.createXYAreaChart(
+						"Wykres Mocy reakcji jądrowej",//Tytul
+						"Czas (s)", // opisy osi
+						"Moc wybuchu", 
+						dataset, // Dane 
+						PlotOrientation.VERTICAL, // Orjentacja wykresu /HORIZONTAL
+						true, // legenda
+						true, // tooltips
+						false
+					);
+					//Dodanie wykresu do okna
+					ChartFrame chartFrame=new ChartFrame("Wykres mocy",chart);
+					chartFrame.setVisible(true);
+					chartFrame.setSize(500,400);
+				}
+				
+			}
+		});
+		
+		menu.resetItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				curSymulation.setStopped(true);
+				curSymulation = new Symulation(centralny, prawy);
+				
+				curSymulation.setnNeutronow(lewy.nNeutronow.getValue() );
+				curSymulation.setpExplosion((double)lewy.pRozpadu.getValue()/1000);
+				curSymulation.setnParticles(lewy.nAtomow.getValue());
+				curSymulation.execute();
+			}
+		});
+		
+		menu.outItem.addActionListener(new ActionListener() { //Wypisuje parametry
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+				int result = chooser.showDialog(null, "Wybierz plik do zapisania parametrów");
+				if(JFileChooser.APPROVE_OPTION == result) {
+					try {
+						PrintWriter writer = new PrintWriter(chooser.getSelectedFile());
+						writer.println("Parametry Symulacji Wybuchu Bomby Atomowej");
+						writer.println("Prawdopodobieństwo samoistnego rozpadu Uranu: "+curSymulation.getpSelfExplosion()+"\n"
+								+ "Prawdopodobieństwo rozpadu z wychwytu neutronu: "+curSymulation.getpExplosion()+"\n"
+										+ "Ilość neutronów wyrzucana z samoistnego rozpadu: "+curSymulation.getnNeutronow()+""
+												+ "Ilość atomów Uranu: "+curSymulation.getnParticles());
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Nie wybrano pliku");
+					System.exit(1);
+				}
+			}
+		});
 		
 	}
 
@@ -126,7 +181,7 @@ public class Main extends JFrame implements ChangeListener{
 					centralny.getForeground());
 			if(changeBackgroundColor!=null) {
 				curSymulation.changeBackgroundColor(changeBackgroundColor);
-				curSymulation = new Symulation(centralny);
+				curSymulation = new Symulation(centralny, prawy);
 				centralny.repaint();
 				centralny.revalidate();
 				curSymulation.execute();

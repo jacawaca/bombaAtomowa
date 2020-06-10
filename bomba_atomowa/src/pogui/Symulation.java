@@ -14,6 +14,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.SwingWorker;
+
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.xy.XYSeries;
 /**
  * @author "Jacek Strzałkowski"
  * Klasa w której będzie się odbywać symulacja
@@ -27,18 +30,35 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 //	private double allMasa;
 	private final int dim=100; //Wymiar SIATKI
 	
+	private final double reactionEnergy = 10,
+			selfExplosionEnergy = 20;
+	
+	private double totalEnergy;
+	
 	private final double activeRadius = 5;
 	
 	
 	private final int showedX = 50, showedYmin = 0, showedYmax = 40,
 			showedZmin = 0, showedZmax=40;
 	private Centralny centralny;
+	private PrawyInfo prawy;
+	
 	private BufferedImage imageSimulation;
 	
 	private double pExplosion=0.01;
 	private final double pChangeMove=0.3, pSelfExplosion=0.01;
 
+	public double getpSelfExplosion() {
+		return pSelfExplosion;
+	}
 	
+	public double getpChangeMove() {
+		return pChangeMove;
+	}
+
+	public double getpExplosion() {
+		return pExplosion;
+	}
 	
 	public void setpExplosion(double pExplosion) {
 		this.pExplosion = pExplosion;
@@ -68,9 +88,14 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	public void setStopped(boolean isStopped) {
 		this.is2Stop = isStopped;
 	}
-
 	
-	public Symulation(Centralny centralny) {
+	private XYSeries timevsPowerSeries;
+	public XYSeries getTimevsPowerSeries() {
+		return timevsPowerSeries;
+	}
+
+	//KONSTRUKTO
+	public Symulation(Centralny centralny, PrawyInfo prawy) {
 		isRunning = false;
 		if(uraniumColor==null)  uraniumColor = Color.RED; //w przyszłości zrobimy lepszy
 		if(backgroundColor==null) backgroundColor = Color.WHITE; //mechanizm
@@ -78,13 +103,13 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 		if(cryptonColor ==null) cryptonColor = Color.CYAN;
 		if(deadUraniumColor ==null) deadUraniumColor = Color.BLACK;
 		this.centralny=centralny;
+		totalEnergy=0;
+		this.prawy = prawy;
+		timevsPowerSeries = new XYSeries("Pomiar Mocy");
 	}
 	
 	private static Color uraniumColor, deadUraniumColor, backgroundColor, barColor, cryptonColor;
 	
-//	public enum Type{
-//		uran, bar, krypton, neutron;
-//	}
 	
 	void changeBackgroundColor(Color colorBackground) {
 		backgroundColor = colorBackground;
@@ -94,9 +119,8 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	
 	
 	void setMove() { //TODO
-//		System.out.println("RUCH");
 		for(Neutron n: neutrons) {
-			if(Math.random()<pChangeMove) {
+			if(Math.random()<getpChangeMove()) {
 				double vTotal = 10;
 				double xShare = Math.random(), yShare = Math.random()*xShare,
 						zShare = 1-xShare-yShare;
@@ -107,7 +131,6 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 			if(n.getZ()>dim || n.getZ()<0) {n.setDz(-n.getDz());
 			}
 			}
-			//Przesuwanie się !!!
 			n.move();
 		}
 	}
@@ -116,6 +139,7 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 		if(particles==null) {System.exit(1);}
 		uran.death();
 		Krypton krypton = new Krypton(uran.x, uran.y, uran.z, 0.1);
+		totalEnergy+=reactionEnergy;
 //		uran = new Krypton(uran.x, uran.y, uran.z, 0.1);
 //		particles.remove(uran);
 //		particles.add(uran);
@@ -123,7 +147,7 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 //		Bar bar = new Bar(uran.x+1, uran.y+1, uran.z+1, 0.1);
 //		particles.add(bar); 
 		addParticles.add(krypton); //addParticles.add(bar);
-		for(int i=0;i<3;i++) {
+		for(int i=0;i<nNeutronow;i++) {
 			Neutron neutron = new Neutron(uran.x, uran.y, uran.z, 0.1);
 			neutron.setDirection(i, i+1, i-1); //Los na razie
 			neutrons.add(neutron);
@@ -132,12 +156,12 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 //	
 	void selfExplosion(Uran uran) {
 		uran.setExplAble(false);
+		totalEnergy+=selfExplosionEnergy;
 		for(int i=0;i<getnNeutronow();i++) {
 			Neutron neutron = new Neutron(uran.x, uran.y, uran.z, 0.1);
 			neutron.setDirection(i, i+1, i-1); //Los na razie
 			neutrons.add(neutron);
 		}
-//		System.out.println("DUPA");
 	}
 //	
 	boolean isSurrounded(Particle p) {
@@ -167,7 +191,7 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	
 	void setToSelfExplosion() {
 		for(Particle p: particles) {
-			if(p.isExplAble() &&  Math.random()<pSelfExplosion)  {
+			if(p.isExplAble() &&  Math.random()<getpSelfExplosion())  {
 					selfExplosion((Uran) p);
 				}
 			}
@@ -189,15 +213,13 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 		else {
 			return;
 		}
-		g.fillOval(ypos, zpos, 10, 10);
+		g.fillOval(ypos, zpos, 15, 15);
 	}
 	
 	void drawNeutron(Graphics2D g, Neutron n) {
 		g.setColor(Color.BLUE);
 		int ypos = (int) (imageSimulation.getWidth()/(showedYmax-showedYmin)*n.getY());
 		int zpos = (int) (imageSimulation.getWidth()/(showedZmax-showedZmin)*n.getZ());
-//		System.out.println("JESTEM RYSOWANY na "+n.getX()+
-//				" i "+n.getY());
 		g.fillOval(
 				ypos,
 				zpos
@@ -269,7 +291,6 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	
 	protected void done() {
 		try {
-//			centralny.getGraphics().drawImage(get(), 0, 0, centralny);
 			simEnd = new Date();
 			centralny.setImg(get());
 			centralny.repaint();
@@ -282,14 +303,18 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	
 	@Override
 	protected void process(List<BufferedImage> chunks) {
-		// TODO Auto-generated method stub
-//		super.process(chunks);
 		for(BufferedImage img : chunks) {
-//			centralny.getGraphics().clearRect(0, 0, centralny.getWidth(), centralny.getHeight());
-//			centralny.getGraphics().
-//			centralny.getGraphics().drawImage(img, 0, 0, centralny);
 			centralny.setImg(img);
 			centralny.repaint();
+			Date curDate = new Date();
+			double timeSinceStart = curDate.getTime()-simBegin.getTime();
+			prawy.setTime(curDate, simBegin);
+			double curPower;
+			if(timeSinceStart ==0) curPower=0;
+			else curPower = totalEnergy/timeSinceStart;
+			prawy.setEnergy(curPower);
+			getTimevsPowerSeries().add(
+					timeSinceStart,curPower);
 		}
 	}
 	
@@ -300,6 +325,7 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	public void setnParticles(int nParticles) {
 		Symulation.nParticles = nParticles;
 	}
+
 	
 	
 //	public static void main(String[] args) {

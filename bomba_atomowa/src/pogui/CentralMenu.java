@@ -25,30 +25,42 @@ public class CentralMenu extends JMenuBar implements ActionListener{
     JColorChooser colorChooser;
     int panelNumber;
     JPanel centerPanel;
-    public JMenuItem chLang, chBackground;
+    public JMenuItem chLang, chBackground, drawPlot,
+    inItem, outItem, resetItem;
     
 	public CentralMenu() {
 		JMenu menuLook = new JMenu("Menu");
 		chLang = new JMenuItem("Zmień język");
 		menuLook.add(chLang);
 		
-		JMenu inMenu = new JMenu("Wczytaj");
-		menuLook.add(inMenu);
-		menuLook.addSeparator();
+		drawPlot = new JMenuItem("Narysuj wykres");
+		menuLook.add(drawPlot);
 		
-		JMenu outMenu = new JMenu("Zapisz");
-		menuLook.add(outMenu);
-		menuLook.addSeparator();
-	/*	
+//		JMenu inMenu = new JMenu("Wczytaj");
+//		menuLook.add(inMenu);
+//		menuLook.addSeparator();
+		
+		inItem = new JMenuItem("Wczytaj");
+		menuLook.add(inItem);
+		
+//		JMenu outMenu = new JMenu("Zapisz");
+//		menuLook.add(outMenu);
+//		menuLook.addSeparator();
+		outItem = new JMenuItem("Zapisz");
+		menuLook.add(outItem);
+		/*	
 		JMenu newMenu = new JMenu("Nowy Plik");
 		menuLook.add(newMenu);
 		menuLook.addSeparator();
-        */        
-                JMenu resetMenu = new JMenu("Reset");
-		menuLook.add(resetMenu);
-		menuLook.addSeparator();
+        */
 		
-		JMenu exitMenu = new JMenu("Wyj�cie");
+//                JMenu resetMenu = new JMenu("Reset");
+//		menuLook.add(resetMenu);
+//		menuLook.addSeparator();
+		resetItem = new JMenuItem("Reset");
+		menuLook.add(resetItem);
+		
+		JMenuItem exitMenu = new JMenuItem("Wyjście");
 		exitMenu.addActionListener(new ActionListener() {
 			
 			@Override
@@ -58,8 +70,8 @@ public class CentralMenu extends JMenuBar implements ActionListener{
 			}
 		});
 		
-		menuLook.add(resetMenu);
-		menuLook.addSeparator();
+		menuLook.add(exitMenu);
+//		menuLook.addSeparator();
 		this.add(menuLook);
 		
                 JMenu menukolorow = new JMenu("Wyglad");
