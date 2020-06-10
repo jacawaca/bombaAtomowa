@@ -3,68 +3,76 @@
  */
 package pogui;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JButton;
+
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
-
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 /**
  * @author Paweł Polak
  *
  */
-public class CentralMenu extends JMenuBar implements ActionListener{
-    private JMenuItem backMenu;
+public class CentralMenu extends JMenuBar{
     JFrame colorFrame;
     JColorChooser colorChooser;
     int panelNumber;
     JPanel centerPanel;
     public JMenuItem chLang, chBackground, drawPlot,
     inItem, outItem, resetItem, resultItem,
-    uranColor, deadUranColor, kryptonColor;
+    uranColor, deadUranColor, kryptonColor, lic, exi, exitMenu;
+    
+    private JMenu menuLook, menukolorow, particMenu;
+    
+    boolean isPolish;
+    
+    private final String 
+	licence_pl = "Licencja",
+	licence_eng = "Licence",
+	lang_pl = "Zmien jezyk",
+	lang_eng = "Switch language",
+                wcz_pl = "Wczytaj",
+	wcz_eng = "Load",
+                zap_pl = "Zapisz",
+	zap_eng = "Save",
+                ex_pl = "Wyjscie",
+	ex_eng = "Exit",
+                wyg_pl = "Wyglad",
+	wyg_eng = "View",
+                part_pl = "Czasteczki",
+	part_eng = "Particles",
+                chb_pl = "Zmien Tlo",
+	chb_eng = "Change Background";
+    
     
 	public CentralMenu() {
-		JMenu menuLook = new JMenu("Menu");
+		isPolish=true;
+		menuLook = new JMenu("Menu");
 		chLang = new JMenuItem("Zmień język");
 		menuLook.add(chLang);
 		
 		drawPlot = new JMenuItem("Narysuj wykres");
 		menuLook.add(drawPlot);
 		
-//		JMenu inMenu = new JMenu("Wczytaj");
-//		menuLook.add(inMenu);
-//		menuLook.addSeparator();
+
 		
 		inItem = new JMenuItem("Wczytaj");
 		menuLook.add(inItem);
-		
-//		JMenu outMenu = new JMenu("Zapisz");
-//		menuLook.add(outMenu);
-//		menuLook.addSeparator();
+
 		outItem = new JMenuItem("Zapisz parametry");
 		menuLook.add(outItem);
 		
 		resultItem = new JMenuItem("Zapisz wyniki");
 		menuLook.add(resultItem);
-		/*	
-		JMenu newMenu = new JMenu("Nowy Plik");
-		menuLook.add(newMenu);
-		menuLook.addSeparator();
-        */
-		
-//                JMenu resetMenu = new JMenu("Reset");
-//		menuLook.add(resetMenu);
-//		menuLook.addSeparator();
+
 		resetItem = new JMenuItem("Reset");
 		menuLook.add(resetItem);
 		
-		JMenuItem exitMenu = new JMenuItem("Wyjście");
+		exitMenu = new JMenuItem("Wyjście");
 		exitMenu.addActionListener(new ActionListener() {
 			
 			@Override
@@ -75,80 +83,63 @@ public class CentralMenu extends JMenuBar implements ActionListener{
 		});
 		
 		menuLook.add(exitMenu);
-//		menuLook.addSeparator();
 		this.add(menuLook);
 		
-                JMenu menukolorow = new JMenu("Wyglad");
-		JMenu particMenu = new JMenu("Zmień kolor cząsteczki");
+        menukolorow = new JMenu("Wyglad");
+		particMenu = new JMenu("Zmień kolor cząsteczki");
 		menukolorow.add(particMenu);
 //		menukolorow.addSeparator();
 		uranColor = new JMenuItem("Uran"); deadUranColor = new JMenuItem("Nieaktywny Uran");
 		kryptonColor = new JMenuItem("Krypton");
 		particMenu.add(uranColor); particMenu.add(deadUranColor);
 		particMenu.add(kryptonColor);
-		
-//		backMenu = new JMenuItem("Tlo");
-////                backMenu.setActionCommand("tlo");
-////                backMenu.addActionListener(this);
-//		menukolorow.add(backMenu);
-//		menukolorow.addSeparator();
-//		
+
 		chBackground = new JMenuItem("Zmień tło na panelu");
 //		backMenu.add(chBackground);
 		menukolorow.add(chBackground);
-	/*	
-		JMenu newMenu = new JMenu("Nowy Plik");
-		menuLook.add(newMenu);
-		menuLook.addSeparator();
-               
-                JMenu resetMenu = new JMenu("Reset");
-		menukolorow.add(resetMenu);
-		menukolorow.addSeparator();
 		
-		
-		menukolorow.add(resetMenu);
-		menukolorow.addSeparator();
- */
+		lic = new JMenuItem("Licencja");
+		lic.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null,"Creative Commons Legal Code, CC0 1.0 Universal");
+				
+			}
+		});
+
 		this.add(menukolorow);
         
 		
    
 	}
+	 void changeLanguage() {
+			if(!isPolish) {
+				lic.setText(licence_pl);
+				chLang.setText(lang_pl);
+				inItem.setText(wcz_pl);
+                outItem.setText(zap_pl);
+                exitMenu.setText(ex_pl);
+                menukolorow.setText(wyg_pl);
+                particMenu.setText(part_pl);
+//                ba.setText(back_pl);
+                chBackground.setText(chb_pl);
+//				isPolish=false;
+			}
+			else {
+				System.out.println("Nie działa");
+				lic.setText(licence_eng);
+				chLang.setText(lang_eng);
+				inItem.setText(wcz_eng);
+                outItem.setText(zap_eng);
+                exitMenu.setText(ex_eng);
+                menukolorow.setText(wyg_eng);
+                particMenu.setText(part_eng);
+//                backMenu.setText(back_eng);
+                chBackground.setText(chb_eng);
+//				isPolish=true;
+			}
+			isPolish=!isPolish;
+		}
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        if(e.getActionCommand() == "tlo")
-//{
-//                setSize(1000, 640);
-//		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-//		
-//		//color chooser
-//		colorFrame = new JFrame();
-//                colorFrame.setVisible(true);
-//		colorFrame.setSize(640, 480);
-//		colorFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-//		colorChooser = new JColorChooser();
-//		colorFrame.add(colorChooser, BorderLayout.CENTER);
-//		JButton ok = new JButton("OK");
-//		//panelNumber = 2;
-//		ActionListener okListener = new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//                            
-//					centerPanel.setBackground(colorChooser.getColor());
-//					colorFrame.dispose();
-//                                    }
-//				
-//			};
-//		ok.addActionListener(okListener);
-//		colorFrame.add(ok, BorderLayout.PAGE_END);
-//                centerPanel = new JPanel();
-//                add(centerPanel, BorderLayout.CENTER);
-//}
-    }
-    private void setDefaultCloseOperation(int DISPOSE_ON_CLOSE) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     }

@@ -6,9 +6,6 @@ package pogui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileWriter;
-//import java.lang.FdLibm.Pow;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.SwingWorker;
 
-import org.jfree.data.time.TimeSeries;
 import org.jfree.data.xy.XYSeries;
 /**
  * @author "Jacek Strzałkowski"
@@ -29,7 +25,6 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	private Siatka siatka;
 	private List<Particle> particles;// = new ArrayList<Particle>();
 	private List<Neutron> neutrons;
-//	private double allMasa;
 	private final int dim=100; //Wymiar SIATKI
 	
 	private final double reactionEnergy = 10,
@@ -37,7 +32,7 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	
 	private double totalEnergy;
 	
-	private final double activeRadius = 5;
+	private final double activeRadius = 5*Math.pow(10, -4);;
 	
 	
 	private final int showedX = 50, showedYmin = 0, showedYmax = 40,
@@ -48,7 +43,7 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	private BufferedImage imageSimulation;
 	
 	private static double pExplosion=0.01;
-	private final double pChangeMove=0.3, pSelfExplosion=0.01;
+	private final double pChangeMove=0.3, pSelfExplosion=0.001;
 
 	public double getpSelfExplosion() {
 		return pSelfExplosion;
@@ -97,16 +92,16 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	}
 	
 
-	private List<String> infoLines;
+	private static List<String> infoLines;
 	public List<String> getInfoLines() {
 		return infoLines;
 	}
 	
-	//KONSTRUKTO
+	//KONSTRUKTOR
 	public Symulation(Centralny centralny, PrawyInfo prawy) {
 		isRunning = false;
-		if(getUraniumColor()==null)  setUraniumColor(Color.RED); //w przyszłości zrobimy lepszy
-		if(getBackgroundColor()==null) setBackgroundColor(Color.WHITE); //mechanizm
+		if(getUraniumColor()==null)  setUraniumColor(Color.RED); 
+		if(getBackgroundColor()==null) setBackgroundColor(Color.WHITE);
 		if(getBarColor() ==null) setBarColor(Color.GREEN);
 		if(getCryptonColor() ==null) setCryptonColor(Color.CYAN);
 		if(getDeadUraniumColor() ==null) setDeadUraniumColor(Color.BLACK);
@@ -114,21 +109,15 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 		totalEnergy=0;
 		this.prawy = prawy;
 		timevsPowerSeries = new XYSeries("Pomiar Mocy");
-		infoLines = new ArrayList<String>();
+		infoLines = new ArrayList<String>(); infoLines.add("Początek Symulacji:\n");
 	}
 	
 	
+
 	
 	
 	
-	void changeBackgroundColor(Color colorBackground) {
-		setBackgroundColor(colorBackground);
-//		draw();
-	}
-	
-	
-	
-	void setMove() { //TODO
+	void setMove() { 
 		for(Neutron n: neutrons) {
 			if(Math.random()<getpChangeMove()) {
 				double vTotal = 10;
@@ -150,10 +139,8 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 		uran.death();
 		Krypton krypton = new Krypton(uran.x, uran.y, uran.z, 0.1);
 		totalEnergy+=reactionEnergy;
-//		uran = new Krypton(uran.x, uran.y, uran.z, 0.1);
-//		particles.remove(uran);
-//		particles.add(uran);
-//		particles.add(krypton);//ENERGIA!!
+		//Zrezygnowaliśmy z Baru
+		//Gdyż nic jakościowego nie wnosił :(
 //		Bar bar = new Bar(uran.x+1, uran.y+1, uran.z+1, 0.1);
 //		particles.add(bar); 
 		addParticles.add(krypton); //addParticles.add(bar);
@@ -267,7 +254,7 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 			else if(p instanceof Uran) nDeadUran++;
 			else if(p instanceof Krypton) nKrypton++;
 		}
-//		Fi
+//		Do testów
 //		System.out.println("Żywe urany: "+doRozpadu+" Bar: "+nBar
 //				+ " Krypton"+nKrypton+" DEAN URAN "+nDeadUran);
 		Date curDate = new Date();
@@ -306,6 +293,7 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	protected void done() {
 		try {
 			simEnd = new Date();
+			infoLines.add("KONIEC: "+simEnd.toString());
 			centralny.setImg(get());
 			centralny.repaint();
 		} catch (InterruptedException e) {

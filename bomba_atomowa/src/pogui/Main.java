@@ -3,12 +3,9 @@ package pogui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.GraphicsConfiguration;
 import java.awt.HeadlessException;
-import java.awt.MenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -18,9 +15,7 @@ import java.io.PrintWriter;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
-import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -32,7 +27,8 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 public class Main extends JFrame implements ChangeListener{
 	/**
-	 * 
+	 *  Nie udało się zaimplementować
+	 *  + energii jako sumy 
 	 */
 	private static final long serialVersionUID = 1L;
 	private Centralny centralny;
@@ -41,15 +37,12 @@ public class Main extends JFrame implements ChangeListener{
 	private PrawyInfo prawy;
 	private CentralMenu menu;
 	private Symulation curSymulation;
-//	private M
 
 	public Main() throws HeadlessException {
 		super("Model bomby atomowej");
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
-//		setSize(500, 500);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(false);
-//		setLayout(new BorderLayout());
 		lewy = new LewyInfo();
 		prawy = new PrawyInfo();
 		
@@ -94,7 +87,7 @@ public class Main extends JFrame implements ChangeListener{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				lewy.changeLanguage(); prawy.changeLanguage();
-				dolny.changeLanguage();
+				dolny.changeLanguage(); menu.changeLanguage();
 			}
 		};
 		menu.chLang.addActionListener(chLanguage);
@@ -300,18 +293,8 @@ public class Main extends JFrame implements ChangeListener{
 	
 	
 	
-//	ActionListener chUraniumColor = new ActionListener() {
-//		
-//		@Override
-//		public void actionPerformed(ActionEvent arg0) {
-//			
-//			
-//		}
-//	};
-	
-	
 	public static void main(String[] args) {
-		// test
+		@SuppressWarnings("unused")
 		Main okienko = new Main();
 	
 
@@ -320,18 +303,15 @@ public class Main extends JFrame implements ChangeListener{
 	public void stateChanged(ChangeEvent e) {
 	if(curSymulation!=null) {
 		if(e.getSource() == lewy.pRozpadu.getValueSlider()) {
-//			if(!((JSlider) e.getSource()).getValueIsAdjusting()) 
 			curSymulation.setpExplosion((double)lewy.pRozpadu.getValue()/1000);
 			lewy.pRozpadu.setText();
 		}
 		if(e.getSource() == lewy.nNeutronow.getValueSlider()) {
-//			if(!((JSlider) e.getSource()).getValueIsAdjusting()) 
 				curSymulation.setnNeutronow(lewy.nNeutronow.getValue() );
 				lewy.nNeutronow.setText();
 			
 		}
 		if(e.getSource() == lewy.nAtomow.getValueSlider()) {
-//			if(!((JSlider) e.getSource()).getValueIsAdjusting()) 
 			curSymulation.setnParticles(lewy.nAtomow.getValue());
 			lewy.nAtomow.setText();
 		}
