@@ -80,7 +80,7 @@ public class Main extends JFrame implements ChangeListener{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				lewy.changeLanguage(); prawy.changeLanguage();
-				dolny.changeLanguage();
+				dolny.changeLanguage(); menu.changeLanguage();
 			}
 		};
 		menu.chLang.addActionListener(chLanguage);
