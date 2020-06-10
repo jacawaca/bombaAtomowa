@@ -49,6 +49,10 @@ public class Kontrolka extends JPanel {
 		getValueSlider().addChangeListener(chList);
 	}
 	
+	void setValue(int value) {
+		valueSlider.setValue(value);
+	}
+	
 	int getValue() {
 		return getValueSlider().getValue();
 	}

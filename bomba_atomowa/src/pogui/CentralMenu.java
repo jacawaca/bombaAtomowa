@@ -26,7 +26,8 @@ public class CentralMenu extends JMenuBar implements ActionListener{
     int panelNumber;
     JPanel centerPanel;
     public JMenuItem chLang, chBackground, drawPlot,
-    inItem, outItem, resetItem;
+    inItem, outItem, resetItem, resultItem,
+    uranColor, deadUranColor, kryptonColor;
     
 	public CentralMenu() {
 		JMenu menuLook = new JMenu("Menu");
@@ -46,8 +47,11 @@ public class CentralMenu extends JMenuBar implements ActionListener{
 //		JMenu outMenu = new JMenu("Zapisz");
 //		menuLook.add(outMenu);
 //		menuLook.addSeparator();
-		outItem = new JMenuItem("Zapisz");
+		outItem = new JMenuItem("Zapisz parametry");
 		menuLook.add(outItem);
+		
+		resultItem = new JMenuItem("Zapisz wyniki");
+		menuLook.add(resultItem);
 		/*	
 		JMenu newMenu = new JMenu("Nowy Plik");
 		menuLook.add(newMenu);
@@ -75,15 +79,19 @@ public class CentralMenu extends JMenuBar implements ActionListener{
 		this.add(menuLook);
 		
                 JMenu menukolorow = new JMenu("Wyglad");
-		JMenu particMenu = new JMenu("Czasteczki");
+		JMenu particMenu = new JMenu("Zmień kolor cząsteczki");
 		menukolorow.add(particMenu);
-		menukolorow.addSeparator();
+//		menukolorow.addSeparator();
+		uranColor = new JMenuItem("Uran"); deadUranColor = new JMenuItem("Nieaktywny Uran");
+		kryptonColor = new JMenuItem("Krypton");
+		particMenu.add(uranColor); particMenu.add(deadUranColor);
+		particMenu.add(kryptonColor);
 		
-		backMenu = new JMenuItem("Tlo");
-//                backMenu.setActionCommand("tlo");
-//                backMenu.addActionListener(this);
-		menukolorow.add(backMenu);
-		menukolorow.addSeparator();
+//		backMenu = new JMenuItem("Tlo");
+////                backMenu.setActionCommand("tlo");
+////                backMenu.addActionListener(this);
+//		menukolorow.add(backMenu);
+//		menukolorow.addSeparator();
 //		
 		chBackground = new JMenuItem("Zmień tło na panelu");
 //		backMenu.add(chBackground);

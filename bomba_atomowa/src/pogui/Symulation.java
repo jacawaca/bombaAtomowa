@@ -6,6 +6,8 @@ package pogui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileWriter;
 //import java.lang.FdLibm.Pow;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,7 +47,7 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	
 	private BufferedImage imageSimulation;
 	
-	private double pExplosion=0.01;
+	private static double pExplosion=0.01;
 	private final double pChangeMove=0.3, pSelfExplosion=0.01;
 
 	public double getpSelfExplosion() {
@@ -61,15 +63,15 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	}
 	
 	public void setpExplosion(double pExplosion) {
-		this.pExplosion = pExplosion;
+		Symulation.pExplosion = pExplosion;
 	}
 	
-	private int nNeutronow = 4;
+	private static int nNeutronow = 4;
 	public int getnNeutronow() {
 		return nNeutronow;
 	}
 	public void setnNeutronow(int nNeutronow) {
-		this.nNeutronow = nNeutronow;
+		Symulation.nNeutronow = nNeutronow;
 	}
 	
 	private boolean isRunning;
@@ -93,26 +95,34 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	public XYSeries getTimevsPowerSeries() {
 		return timevsPowerSeries;
 	}
+	
 
+	private List<String> infoLines;
+	public List<String> getInfoLines() {
+		return infoLines;
+	}
+	
 	//KONSTRUKTO
 	public Symulation(Centralny centralny, PrawyInfo prawy) {
 		isRunning = false;
-		if(uraniumColor==null)  uraniumColor = Color.RED; //w przyszłości zrobimy lepszy
-		if(backgroundColor==null) backgroundColor = Color.WHITE; //mechanizm
-		if(barColor ==null) barColor = Color.GREEN;
-		if(cryptonColor ==null) cryptonColor = Color.CYAN;
-		if(deadUraniumColor ==null) deadUraniumColor = Color.BLACK;
+		if(getUraniumColor()==null)  setUraniumColor(Color.RED); //w przyszłości zrobimy lepszy
+		if(getBackgroundColor()==null) setBackgroundColor(Color.WHITE); //mechanizm
+		if(getBarColor() ==null) setBarColor(Color.GREEN);
+		if(getCryptonColor() ==null) setCryptonColor(Color.CYAN);
+		if(getDeadUraniumColor() ==null) setDeadUraniumColor(Color.BLACK);
 		this.centralny=centralny;
 		totalEnergy=0;
 		this.prawy = prawy;
 		timevsPowerSeries = new XYSeries("Pomiar Mocy");
+		infoLines = new ArrayList<String>();
 	}
 	
-	private static Color uraniumColor, deadUraniumColor, backgroundColor, barColor, cryptonColor;
+	
+	
 	
 	
 	void changeBackgroundColor(Color colorBackground) {
-		backgroundColor = colorBackground;
+		setBackgroundColor(colorBackground);
 //		draw();
 	}
 	
@@ -199,16 +209,16 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	
 	void drawParticle(byte danaP, Graphics2D g, int zpos, int ypos) {
 		if(danaP==1) {
-			g.setColor(uraniumColor);
+			g.setColor(getUraniumColor());
 		}
 		else if(danaP==2) {
-			g.setColor(cryptonColor);
+			g.setColor(getCryptonColor());
 		}
 		else if(danaP==3) {
-			g.setColor(barColor);
+			g.setColor(getBarColor());
 		}
 		else if(danaP==4) {
-			g.setColor(deadUraniumColor);
+			g.setColor(getDeadUraniumColor());
 		}
 		else {
 			return;
@@ -231,7 +241,7 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 		imageSimulation = new BufferedImage(centralny.getWidth(),
 				centralny.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = imageSimulation.createGraphics();
-		g.setColor(backgroundColor);
+		g.setColor(getBackgroundColor());
 		g.fillRect(0, 0, imageSimulation.getWidth(), imageSimulation.getHeight());
 		for(int y=showedYmin;y<showedYmax;y++) {
 			for(int z=showedZmin;z<showedZmax;z++) {
@@ -257,8 +267,13 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 			else if(p instanceof Uran) nDeadUran++;
 			else if(p instanceof Krypton) nKrypton++;
 		}
-		System.out.println("Żywe urany: "+doRozpadu+" Bar: "+nBar
-				+ " Krypton"+nKrypton+" DEAN URAN "+nDeadUran);
+//		Fi
+//		System.out.println("Żywe urany: "+doRozpadu+" Bar: "+nBar
+//				+ " Krypton"+nKrypton+" DEAN URAN "+nDeadUran);
+		Date curDate = new Date();
+		String str2Write = "Żywe urany: "+doRozpadu+" Bar: "+nBar
+				+ " Krypton"+nKrypton+" DEAN URAN "+nDeadUran+" "+curDate.toString();
+		getInfoLines().add(str2Write);
 	}
 	
 	
@@ -281,7 +296,6 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 			draw();
 			publish(imageSimulation);
 			info();
-//			System.out.println("P rozpadu: "+pExplosion+"\nNNeutronow: "+nNeutronow+" nUranów: "+ nParticles);
 			while(!isRunning) {
 				TimeUnit.MILLISECONDS.sleep(100);
 			}
@@ -325,21 +339,52 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 	public void setnParticles(int nParticles) {
 		Symulation.nParticles = nParticles;
 	}
-
 	
-	
-//	public static void main(String[] args) {
-//		ArrayList<Particle> particles = new ArrayList<Particle>();
-//		int nPart = 10000; //temp
-//		Siatka siatka = new Siatka(nPart, particles);
-//		for(Particle p : particles ) {
-//			p.whoAmI();
-//		}
-//	test.printAll();
+	//Kolory
+	private static Color uraniumColor, deadUraniumColor, backgroundColor, barColor, cryptonColor;
+	public static Color getUraniumColor() {
+		return uraniumColor;
+	}
+
+	public static void setUraniumColor(Color uraniumColor) {
+		Symulation.uraniumColor = uraniumColor;
+	}
+
+	public static Color getDeadUraniumColor() {
+		return deadUraniumColor;
+	}
+
+	public static void setDeadUraniumColor(Color deadUraniumColor) {
+		Symulation.deadUraniumColor = deadUraniumColor;
+	}
+
+	public static Color getBackgroundColor() {
+		return backgroundColor;
+	}
+
+	public static void setBackgroundColor(Color backgroundColor) {
+		Symulation.backgroundColor = backgroundColor;
+	}
+
+	public static Color getBarColor() {
+		return barColor;
+	}
+
+	public static void setBarColor(Color barColor) {
+		Symulation.barColor = barColor;
+	}
+
+	public static Color getCryptonColor() {
+		return cryptonColor;
+	}
+
+	public static void setCryptonColor(Color cryptonColor) {
+		Symulation.cryptonColor = cryptonColor;
+	}
 
 
 
-	
 
-//}
+
+
 }

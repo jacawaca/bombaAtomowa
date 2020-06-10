@@ -8,7 +8,11 @@ import java.awt.HeadlessException;
 import java.awt.MenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.swing.JColorChooser;
@@ -109,6 +113,7 @@ public class Main extends JFrame implements ChangeListener{
 					return ;
 				}
 				else {
+					curSymulation.setRunning(true);
 					XYSeriesCollection dataset = new XYSeriesCollection();
 					dataset.addSeries(curSymulation.getTimevsPowerSeries());
 					JFreeChart chart = ChartFactory.createXYAreaChart(
@@ -125,6 +130,7 @@ public class Main extends JFrame implements ChangeListener{
 					ChartFrame chartFrame=new ChartFrame("Wykres mocy",chart);
 					chartFrame.setVisible(true);
 					chartFrame.setSize(500,400);
+					curSymulation.setRunning(false);
 				}
 				
 			}
@@ -146,18 +152,21 @@ public class Main extends JFrame implements ChangeListener{
 		menu.outItem.addActionListener(new ActionListener() { //Wypisuje parametry
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				curSymulation.setRunning(false);
+				if(curSymulation==null) { JOptionPane.showMessageDialog(null, "Brak Symulacji"); System.exit(ABORT);}
 				JFileChooser chooser = new JFileChooser();
 				int result = chooser.showDialog(null, "Wybierz plik do zapisania parametrów");
 				if(JFileChooser.APPROVE_OPTION == result) {
 					try {
 						PrintWriter writer = new PrintWriter(chooser.getSelectedFile());
 						writer.println("Parametry Symulacji Wybuchu Bomby Atomowej");
-						writer.println("Prawdopodobieństwo samoistnego rozpadu Uranu: "+curSymulation.getpSelfExplosion()+"\n"
-								+ "Prawdopodobieństwo rozpadu z wychwytu neutronu: "+curSymulation.getpExplosion()+"\n"
-										+ "Ilość neutronów wyrzucana z samoistnego rozpadu: "+curSymulation.getnNeutronow()+""
-												+ "Ilość atomów Uranu: "+curSymulation.getnParticles());
+						writer.println("Prawdopodobieństwo samoistnego rozpadu Uranu:\n"+curSymulation.getpSelfExplosion()+"\n"
+								+ "Prawdopodobieństwo rozpadu z wychwytu neutronu:\n"+curSymulation.getpExplosion()+"\n"
+										+ "Ilość neutronów wyrzucana z samoistnego rozpadu:\n"+curSymulation.getnNeutronow()+"\n"
+												+ "Ilość atomów Uranu:\n"+curSymulation.getnParticles());
+						writer.close();
+						JOptionPane.showMessageDialog(null, "Zapisano do pliku "+chooser.getSelectedFile().getAbsolutePath());
 					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -165,6 +174,110 @@ public class Main extends JFrame implements ChangeListener{
 					JOptionPane.showMessageDialog(null, "Nie wybrano pliku");
 					System.exit(1);
 				}
+				curSymulation.setRunning(true);
+			}
+		});
+		
+		menu.inItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) { //Biedne ale działa :(
+				curSymulation.setRunning(false); //zatrzymujemy symulację
+				JFileChooser chooser = new JFileChooser(); 
+				int result = chooser.showDialog(null, "Wybierz plik z którego chcesz wczytać parametry");
+				if(JFileChooser.APPROVE_OPTION==result) {
+					try {
+						BufferedReader reader = new BufferedReader(new FileReader(chooser.getSelectedFile()));
+						String st = reader.readLine(); reader.readLine();
+						st = reader.readLine();
+						double gotPWybuchu = Double.parseDouble(st); reader.readLine(); st=reader.readLine(); //samoistnego
+						double gotPReakcja = Double.parseDouble(st); reader.readLine(); st=reader.readLine();
+						int gotnNeutronow = Integer.parseInt(st); reader.readLine(); st=reader.readLine();
+						int gotnUranow = Integer.parseInt(st); reader.readLine(); st=reader.readLine();
+						reader.close();
+						JOptionPane.showMessageDialog(null, "Wczytano+"+gotPWybuchu+" "+gotPReakcja+" "+gotnNeutronow+" "+gotnUranow);
+						if(gotPWybuchu*100>=lewy.pRozpadu.getValueSlider().getMinimum() && gotPWybuchu*100<=lewy.pRozpadu.getValueSlider().getMaximum()) {
+							lewy.pRozpadu.setValue((int)gotPWybuchu*100);
+						} else System.exit(1);
+						if(gotnNeutronow >= lewy.nNeutronow.getValueSlider().getMinimum() && gotnNeutronow <= lewy.nNeutronow.getValueSlider().getMaximum()) {
+							lewy.nNeutronow.getValueSlider().setValue(gotnUranow);
+						} else System.exit(1);
+						if(gotnUranow >= lewy.nAtomow.getValueSlider().getMinimum() && 
+								gotnUranow <= lewy.nAtomow.getValueSlider().getMaximum()) {
+							lewy.nAtomow.getValueSlider().setValue(gotnUranow);
+						} else System.exit(1);
+						//Resetowanie symulacji
+						curSymulation.setStopped(true);
+						curSymulation = new Symulation(centralny, prawy);
+						
+						curSymulation.setnNeutronow(lewy.nNeutronow.getValue() );
+						curSymulation.setpExplosion((double)lewy.pRozpadu.getValue()/1000);
+						curSymulation.setnParticles(lewy.nAtomow.getValue());
+						curSymulation.execute();
+						
+						
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+			curSymulation.setRunning(true); //wznawiamy symulację	
+			}
+		});
+		menu.resultItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				curSymulation.setRunning(false);
+				JFileChooser chooser = new JFileChooser(); 
+				int result = chooser.showDialog(null, "Zapisz plik z wynikiem symulacji");
+				if(JFileChooser.APPROVE_OPTION==result) {
+					try {
+						PrintWriter writer = new PrintWriter(chooser.getSelectedFile());
+						for(String i: curSymulation.getInfoLines()) {
+							writer.println(i);
+						}
+						writer.close();
+						JOptionPane.showMessageDialog(null, "Zapisano do pliku "+chooser.getSelectedFile().getAbsolutePath());
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					}
+				}
+				curSymulation.setRunning(true);
+				
+			}
+		});
+		menu.uranColor.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Color changeUranium = JColorChooser.showDialog(null, "Wybierz kolor tła",
+						Symulation.getUraniumColor());
+				if(changeUranium!=null) {
+					Symulation.setUraniumColor(changeUranium);
+				}
+				
+			}
+		});
+		menu.deadUranColor.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Color changeDeadUranium = JColorChooser.showDialog(null, "Wybierz kolor tła",
+						Symulation.getDeadUraniumColor());
+				if(changeDeadUranium!=null) {
+					Symulation.setDeadUraniumColor(changeDeadUranium);
+				}
+				
+			}
+		});
+		menu.kryptonColor.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Color changeKrypton = JColorChooser.showDialog(null, "Wybierz kolor tła",
+						Symulation.getCryptonColor());
+				if(changeKrypton!=null) {
+					Symulation.setCryptonColor(changeKrypton);
+				}
+				
 			}
 		});
 		
@@ -178,17 +291,15 @@ public class Main extends JFrame implements ChangeListener{
 		@Override
 		public void actionPerformed(ActionEvent arg0) { //TODO check
 			Color changeBackgroundColor = JColorChooser.showDialog(null, "Wybierz kolor tła",
-					centralny.getForeground());
+					Symulation.getBackgroundColor());
 			if(changeBackgroundColor!=null) {
-				curSymulation.changeBackgroundColor(changeBackgroundColor);
-				curSymulation = new Symulation(centralny, prawy);
-				centralny.repaint();
-				centralny.revalidate();
-				curSymulation.execute();
-
+				Symulation.setBackgroundColor(changeBackgroundColor);
 			}
 		}
 	};
+	
+	
+	
 //	ActionListener chUraniumColor = new ActionListener() {
 //		
 //		@Override
