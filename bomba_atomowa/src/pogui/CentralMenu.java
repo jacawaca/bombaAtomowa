@@ -26,18 +26,44 @@ public class CentralMenu extends JMenuBar implements ActionListener{
     JColorChooser colorChooser;
     int panelNumber;
     JPanel centerPanel;
-    public JMenuItem chLang, chBackground, lic;
+    public JMenuItem chLang, chBackground, lic, resetMenu, inMenu, outMenu, exitMenu, particMenu;
+    public JMenu menukolorow;
+    boolean isPolish;
+    
+    private final String 
+			licence_pl = "Licencja",
+			licence_eng = "Licence",
+			lang_pl = "Zmien jezyk",
+			lang_eng = "Switch language",
+                        wcz_pl = "Wczytaj",
+			wcz_eng = "Load",
+                        zap_pl = "Zapisz",
+			zap_eng = "Save",
+                        ex_pl = "Wyjscie",
+			ex_eng = "Exit",
+                        wyg_pl = "Wyglad",
+			wyg_eng = "View",
+                        part_pl = "Czasteczki",
+			part_eng = "Particles",
+                        back_pl = "Tlo",
+			back_eng = "Background",
+                        chb_pl = "Zmien Tlo",
+			chb_eng = "Change Background";
     
 	public CentralMenu() {
 		JMenu menuLook = new JMenu("Menu");
 		chLang = new JMenuItem("Zmień język");
 		menuLook.add(chLang);
 		
-		JMenu inMenu = new JMenu("Wczytaj");
+		//JMenu inMenu = new JMenu("Wczytaj");
+		//menuLook.add(inMenu);
+                inMenu = new JMenuItem("Wczytaj");
 		menuLook.add(inMenu);
 		menuLook.addSeparator();
 		
-		JMenu outMenu = new JMenu("Zapisz");
+		//JMenu outMenu = new JMenu("Zapisz");
+		//menuLook.add(outMenu);
+                outMenu = new JMenuItem("Zapisz");
 		menuLook.add(outMenu);
 		menuLook.addSeparator();
 		//JMenu license = new JMenu("Licencja");
@@ -47,14 +73,18 @@ public class CentralMenu extends JMenuBar implements ActionListener{
 		menuLook.add(newMenu);
 		menuLook.addSeparator();
         */        
-                JMenu resetMenu = new JMenu("Reset");
+            //    JMenu resetMenu = new JMenu("Reset");
+	//	menuLook.add(resetMenu);
+                resetMenu = new JMenuItem("Reset");
 		menuLook.add(resetMenu);
 		menuLook.addSeparator();
                 
                 lic = new JMenuItem("Licencja");
 		menuLook.add(lic);
 		
-		JMenu exitMenu = new JMenu("Wyj�cie");
+                exitMenu = new JMenuItem("Wyjscie");
+		
+		//JMenu exitMenu = new JMenu("Wyj�cie");
 		exitMenu.addActionListener(new ActionListener() {
 			
 			@Override
@@ -63,13 +93,16 @@ public class CentralMenu extends JMenuBar implements ActionListener{
 				
 			}
 		});
-		
-		menuLook.add(resetMenu);
-		menuLook.addSeparator();
+                menuLook.add(resetMenu);
+		menuLook.add(exitMenu);
+                menuLook.addSeparator();
+                
 		this.add(menuLook);
 		
-                JMenu menukolorow = new JMenu("Wyglad");
-		JMenu particMenu = new JMenu("Czasteczki");
+                menukolorow = new JMenu("Wyglad");
+		//menuLook.add(lic);
+		//JMenu particMenu = new JMenu("Czasteczki");
+                particMenu = new JMenuItem("Czasteczki");
 		menukolorow.add(particMenu);
 		menukolorow.addSeparator();
 		
@@ -79,7 +112,7 @@ public class CentralMenu extends JMenuBar implements ActionListener{
 		menukolorow.add(backMenu);
 		menukolorow.addSeparator();
 //		
-		chBackground = new JMenuItem("Zmień tło na panelu");
+		chBackground = new JMenuItem("Zmień tło");
 //		backMenu.add(chBackground);
 		menukolorow.add(chBackground);
 	/*	
@@ -101,6 +134,33 @@ public class CentralMenu extends JMenuBar implements ActionListener{
         
 		
    
+	}
+        
+        void changeLanguage() {
+		if(isPolish) {
+			lic.setText(licence_pl);
+			chLang.setText(lang_pl);
+			inMenu.setText(wcz_pl);
+                        outMenu.setText(zap_pl);
+                        exitMenu.setText(ex_pl);
+                        menukolorow.setText(wyg_pl);
+                        particMenu.setText(part_pl);
+                        backMenu.setText(back_pl);
+                        chBackground.setText(chb_pl);
+			isPolish=false;
+		}
+		else {
+			lic.setText(licence_eng);
+			chLang.setText(lang_eng);
+			inMenu.setText(wcz_eng);
+                        outMenu.setText(zap_eng);
+                        exitMenu.setText(ex_eng);
+                        menukolorow.setText(wyg_eng);
+                        particMenu.setText(part_eng);
+                        backMenu.setText(back_eng);
+                        chBackground.setText(chb_eng);
+			isPolish=true;
+		}
 	}
 
     @Override
@@ -144,3 +204,4 @@ public class CentralMenu extends JMenuBar implements ActionListener{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     }
+
