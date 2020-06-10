@@ -27,7 +27,7 @@ public class Symulation extends SwingWorker<BufferedImage, BufferedImage> {
 //	private double allMasa;
 	private final int dim=100; //Wymiar SIATKI
 	
-	private final double activeRadius = 5;
+	private final double activeRadius = 4.95*10^-4;
 	
 	
 	private final int showedX = 50, showedYmin = 0, showedYmax = 40,
